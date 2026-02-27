@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Instagram, MessageCircle } from "lucide-react";
+import { Globe, Instagram, MessageCircle } from "lucide-react";
 
 export default function LoginClient() {
   const [login, setLogin] = useState("");
@@ -118,25 +118,36 @@ export default function LoginClient() {
         {/* ✅ Links fora do card */}
         <div className="pt-4 flex items-center justify-center gap-8 text-sm text-neutral-700">
           <a
-            href="https://instagram.com/viasaereastrip"
+            href="https://instagram.com/loirodasmilhas"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 hover:text-black"
-            aria-label="Instagram @viasaereastrip"
+            aria-label="Instagram @loirodasmilhas"
           >
             <Instagram size={18} />
-            <span className="font-medium">@viasaereastrip</span>
+            <span className="font-medium">@loirodasmilhas</span>
           </a>
 
           <a
-            href="https://wa.me/5553999760707"
+            href="https://wa.me/98970160854"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 hover:text-black"
-            aria-label="WhatsApp (53) 99976-0707"
+            aria-label="WhatsApp 98970160854"
           >
             <MessageCircle size={18} />
-            <span className="font-medium">WhatsApp</span>
+            <span className="font-medium">98970160854</span>
+          </a>
+
+          <a
+            href="https://loirodasmilhas.com.br"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:text-black"
+            aria-label="Site loirodasmilhas.com.br"
+          >
+            <Globe size={18} />
+            <span className="font-medium">Site</span>
           </a>
         </div>
       </div>

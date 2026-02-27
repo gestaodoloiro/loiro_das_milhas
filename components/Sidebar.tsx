@@ -258,11 +258,7 @@ export default function Sidebar() {
   // ✅ NOVO: Protocolos
   const isProtocolosRoute = pathname.startsWith("/dashboard/protocolos");
 
-  // ✅ NOVO: Grupo VIP WhatsApp
-  const isGrupoVipWhatsappRoute = pathname.startsWith("/dashboard/grupo-vip-whatsapp");
-
   // ✅ NOVO: OUTROS
-  const isAutomacaoRoute = pathname.startsWith("/dashboard/automacao");
   const isWalletRoute = pathname.startsWith("/dashboard/wallet");
 
   // ✅ NOVO: Agenda
@@ -284,7 +280,6 @@ export default function Sidebar() {
   );
 
   const isOutrosRoute =
-    isAutomacaoRoute ||
     isWalletRoute ||
     isAgendaRoute ||
     isAtualizacaoTermosRoute ||
@@ -375,7 +370,6 @@ export default function Sidebar() {
   const [openEmissoesBalcao, setOpenEmissoesBalcao] = useState(
     isEmissoesBalcaoRoute
   );
-  const [openGrupoVip, setOpenGrupoVip] = useState(isGrupoVipWhatsappRoute);
 
   useEffect(() => setOpenCadastro(isCadastroRoute), [isCadastroRoute]);
 
@@ -471,7 +465,7 @@ export default function Sidebar() {
     setOpenProtocolos(isProtocolosRoute);
   }, [isProtocolosRoute]);
 
-  // ✅ mantém aberto quando entrar em /automacao/* ou /wallet/* ou /agenda/* ou /atualizacao-termos/*
+  // ✅ mantém aberto quando entrar em /wallet/* ou /agenda/* ou /atualizacao-termos/*
   useEffect(() => {
     setOpenOutros(isOutrosRoute);
   }, [isOutrosRoute]);
@@ -479,10 +473,6 @@ export default function Sidebar() {
   useEffect(() => {
     setOpenEmissoesBalcao(isEmissoesBalcaoRoute);
   }, [isEmissoesBalcaoRoute]);
-
-  useEffect(() => {
-    setOpenGrupoVip(isGrupoVipWhatsappRoute);
-  }, [isGrupoVipWhatsappRoute]);
 
   /* =========================
    * FILTRO (VISUALIZAR PONTOS)
@@ -986,24 +976,6 @@ export default function Sidebar() {
           </NavLink>
         </Accordion>
 
-        <Accordion
-          title="Grupo VIP WHATSAPP"
-          open={openGrupoVip}
-          onToggle={() => setOpenGrupoVip((v) => !v)}
-          active={isGrupoVipWhatsappRoute}
-          accent="blue"
-        >
-          <NavLink href="/dashboard/grupo-vip-whatsapp" exact>
-            Cadastros
-          </NavLink>
-          <NavLink href="/dashboard/grupo-vip-whatsapp/clientes" exact>
-            Clientes
-          </NavLink>
-          <NavLink href="/dashboard/grupo-vip-whatsapp/rateio" exact>
-            Rateio do lucro
-          </NavLink>
-        </Accordion>
-
         {/* ================= OUTROS ================= */}
         <Accordion
           title="Outros"
@@ -1012,8 +984,6 @@ export default function Sidebar() {
           active={isOutrosRoute}
           accent="slate"
         >
-          <NavLink href="/dashboard/automacao">Automação</NavLink>
-
           {/* ✅ NOVO: Agenda */}
           <NavLink href="/dashboard/agenda">Agenda</NavLink>
 
