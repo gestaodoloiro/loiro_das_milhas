@@ -508,22 +508,13 @@ export default function Sidebar() {
    * UI
    * ========================= */
   return (
-    <aside className="w-64 h-screen border-r border-slate-200 bg-gradient-to-b from-white via-slate-50 to-white overflow-y-auto">
+    <aside className="w-64 h-screen border-r border-slate-200 bg-gradient-to-b from-white via-slate-50 to-white flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between border-b bg-white/80 backdrop-blur p-4">
+      <div className="flex items-center border-b bg-white/80 backdrop-blur p-4">
         <div className="flex items-center gap-3">
           <Image src="/logo-gestao-loiro.png" alt="Gestão do Loiro" width={32} height={32} />
           <span className="font-semibold text-slate-800">Gestão do Loiro</span>
         </div>
-
-        {session && (
-          <button
-            onClick={doLogout}
-            className="text-xs border border-slate-200 px-2 py-1 rounded hover:bg-slate-50"
-          >
-            Sair
-          </button>
-        )}
       </div>
 
       {/* Usuário */}
@@ -536,15 +527,16 @@ export default function Sidebar() {
         </div>
       )}
 
-      <nav className="space-y-2 px-2 py-4">
-        {/* ================= CADASTRO ================= */}
-        <Accordion
-          title="Cadastro"
-          open={openCadastro}
-          onToggle={() => setOpenCadastro((v) => !v)}
-          active={isCadastroRoute}
-          accent="sky"
-        >
+      <div className="flex-1 overflow-y-auto">
+        <nav className="space-y-2 px-2 py-4">
+          {/* ================= CADASTRO ================= */}
+          <Accordion
+            title="Cadastro"
+            open={openCadastro}
+            onToggle={() => setOpenCadastro((v) => !v)}
+            active={isCadastroRoute}
+            accent="sky"
+          >
           <SubAccordion
             title="Cedentes"
             open={openCedentes}
@@ -997,8 +989,20 @@ export default function Sidebar() {
           </NavLink>
 
           <NavLink href="/dashboard/wallet">Wallet</NavLink>
-        </Accordion>
-      </nav>
+          </Accordion>
+        </nav>
+      </div>
+
+      {session && (
+        <div className="border-t border-slate-200 bg-white/90 p-3">
+          <button
+            onClick={doLogout}
+            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          >
+            Sair
+          </button>
+        </div>
+      )}
     </aside>
   );
 }
