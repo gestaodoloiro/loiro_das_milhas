@@ -220,7 +220,7 @@ export async function POST(
 
     /**
      * ✅ AJUSTE DEFINITIVO:
-     * - Prisma Cedente tem: senhaEmail/senhaSmiles/senhaLatamPass/senhaLivelo/senhaEsfera
+     * - Prisma Cedente tem: senhaEmail/senhaSmiles/senhaLatamPass/senhaLivelo/senhaEsfera + demais CIAs
      * - Frontend manda: senhaEmailEnc etc
      * Então: aceitamos ambos e salvamos nos campos corretos.
      */
@@ -229,6 +229,14 @@ export async function POST(
     const senhaLatamPass = normalizeString(body?.senhaLatamPassEnc ?? body?.senhaLatamPass, 255);
     const senhaLivelo = normalizeString(body?.senhaLiveloEnc ?? body?.senhaLivelo, 255);
     const senhaEsfera = normalizeString(body?.senhaEsferaEnc ?? body?.senhaEsfera, 255);
+    const senhaIberia = normalizeString(body?.senhaIberiaEnc ?? body?.senhaIberia, 255);
+    const senhaAA = normalizeString(body?.senhaAAEnc ?? body?.senhaAA, 255);
+    const senhaTAP = normalizeString(body?.senhaTAPEnc ?? body?.senhaTAP, 255);
+    const senhaAzul = normalizeString(body?.senhaAzulEnc ?? body?.senhaAzul, 255);
+    const senhaFlyingBlue = normalizeString(
+      body?.senhaFlyingBlueEnc ?? body?.senhaFlyingBlue,
+      255
+    );
 
     const baseCedenteData = {
       nomeCompleto,
@@ -249,11 +257,21 @@ export async function POST(
       senhaLatamPass,
       senhaLivelo,
       senhaEsfera,
+      senhaIberia,
+      senhaAA,
+      senhaTAP,
+      senhaAzul,
+      senhaFlyingBlue,
 
       pontosLatam: normalizeInt(body?.pontosLatam, 0),
       pontosSmiles: normalizeInt(body?.pontosSmiles, 0),
       pontosLivelo: normalizeInt(body?.pontosLivelo, 0),
       pontosEsfera: normalizeInt(body?.pontosEsfera, 0),
+      pontosIberia: normalizeInt(body?.pontosIberia, 0),
+      pontosAA: normalizeInt(body?.pontosAA, 0),
+      pontosTAP: normalizeInt(body?.pontosTAP, 0),
+      pontosAzul: normalizeInt(body?.pontosAzul, 0),
+      pontosFlyingBlue: normalizeInt(body?.pontosFlyingBlue, 0),
 
       ownerId: invite.userId,
       inviteId: invite.id,

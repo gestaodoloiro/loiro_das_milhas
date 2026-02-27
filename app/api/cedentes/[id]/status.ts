@@ -88,11 +88,21 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
         senhaLatamPass: true,
         senhaLivelo: true,
         senhaEsfera: true,
+        senhaIberia: true,
+        senhaAA: true,
+        senhaTAP: true,
+        senhaAzul: true,
+        senhaFlyingBlue: true,
 
         pontosLatam: true,
         pontosSmiles: true,
         pontosLivelo: true,
         pontosEsfera: true,
+        pontosIberia: true,
+        pontosAA: true,
+        pontosTAP: true,
+        pontosAzul: true,
+        pontosFlyingBlue: true,
 
         status: true,
         reviewedAt: true,
@@ -212,6 +222,12 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
           body?.senhaLatamPass !== undefined ? asTrimOrNull(body.senhaLatamPass) : undefined,
         senhaLivelo: body?.senhaLivelo !== undefined ? asTrimOrNull(body.senhaLivelo) : undefined,
         senhaEsfera: body?.senhaEsfera !== undefined ? asTrimOrNull(body.senhaEsfera) : undefined,
+        senhaIberia: body?.senhaIberia !== undefined ? asTrimOrNull(body.senhaIberia) : undefined,
+        senhaAA: body?.senhaAA !== undefined ? asTrimOrNull(body.senhaAA) : undefined,
+        senhaTAP: body?.senhaTAP !== undefined ? asTrimOrNull(body.senhaTAP) : undefined,
+        senhaAzul: body?.senhaAzul !== undefined ? asTrimOrNull(body.senhaAzul) : undefined,
+        senhaFlyingBlue:
+          body?.senhaFlyingBlue !== undefined ? asTrimOrNull(body.senhaFlyingBlue) : undefined,
 
         pontosLatam:
           body?.pontosLatam !== undefined
@@ -228,6 +244,26 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
         pontosEsfera:
           body?.pontosEsfera !== undefined
             ? Math.max(0, Math.floor(numSafe(body.pontosEsfera)))
+            : undefined,
+        pontosIberia:
+          body?.pontosIberia !== undefined
+            ? Math.max(0, Math.floor(numSafe(body.pontosIberia)))
+            : undefined,
+        pontosAA:
+          body?.pontosAA !== undefined
+            ? Math.max(0, Math.floor(numSafe(body.pontosAA)))
+            : undefined,
+        pontosTAP:
+          body?.pontosTAP !== undefined
+            ? Math.max(0, Math.floor(numSafe(body.pontosTAP)))
+            : undefined,
+        pontosAzul:
+          body?.pontosAzul !== undefined
+            ? Math.max(0, Math.floor(numSafe(body.pontosAzul)))
+            : undefined,
+        pontosFlyingBlue:
+          body?.pontosFlyingBlue !== undefined
+            ? Math.max(0, Math.floor(numSafe(body.pontosFlyingBlue)))
             : undefined,
 
         status: body?.status ? (String(body.status) as CedenteStatus) : undefined,

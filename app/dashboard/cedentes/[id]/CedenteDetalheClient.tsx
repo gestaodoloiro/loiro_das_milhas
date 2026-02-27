@@ -25,11 +25,21 @@ type Cedente = {
   senhaLatamPass: string | null;
   senhaLivelo: string | null;
   senhaEsfera: string | null;
+  senhaIberia: string | null;
+  senhaAA: string | null;
+  senhaTAP: string | null;
+  senhaAzul: string | null;
+  senhaFlyingBlue: string | null;
 
   pontosLatam: number;
   pontosSmiles: number;
   pontosLivelo: number;
   pontosEsfera: number;
+  pontosIberia: number;
+  pontosAA: number;
+  pontosTAP: number;
+  pontosAzul: number;
+  pontosFlyingBlue: number;
 
   owner?: Owner | null;
 
@@ -425,11 +435,41 @@ export default function CedenteDetalheClient() {
             onChange={(v) => patch("senhaEsfera", v)}
             editing={editing}
           />
+          <SecretField
+            label="Senha Iberia"
+            value={form.senhaIberia}
+            onChange={(v) => patch("senhaIberia", v)}
+            editing={editing}
+          />
+          <SecretField
+            label="Senha AA"
+            value={form.senhaAA}
+            onChange={(v) => patch("senhaAA", v)}
+            editing={editing}
+          />
+          <SecretField
+            label="Senha TAP"
+            value={form.senhaTAP}
+            onChange={(v) => patch("senhaTAP", v)}
+            editing={editing}
+          />
+          <SecretField
+            label="Senha Azul"
+            value={form.senhaAzul}
+            onChange={(v) => patch("senhaAzul", v)}
+            editing={editing}
+          />
+          <SecretField
+            label="Senha FlyingBlue"
+            value={form.senhaFlyingBlue}
+            onChange={(v) => patch("senhaFlyingBlue", v)}
+            editing={editing}
+          />
         </div>
       </section>
 
       {/* PONTOS */}
-      <section className="rounded-xl border p-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+      <section className="rounded-xl border p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         <NumberInputField
           label="LATAM"
           value={form.pontosLatam}
@@ -452,6 +492,36 @@ export default function CedenteDetalheClient() {
           label="Esfera"
           value={form.pontosEsfera}
           onChange={(v) => patch("pontosEsfera", v)}
+          editing={editing}
+        />
+        <NumberInputField
+          label="Iberia"
+          value={form.pontosIberia}
+          onChange={(v) => patch("pontosIberia", v)}
+          editing={editing}
+        />
+        <NumberInputField
+          label="AA"
+          value={form.pontosAA}
+          onChange={(v) => patch("pontosAA", v)}
+          editing={editing}
+        />
+        <NumberInputField
+          label="TAP"
+          value={form.pontosTAP}
+          onChange={(v) => patch("pontosTAP", v)}
+          editing={editing}
+        />
+        <NumberInputField
+          label="Azul"
+          value={form.pontosAzul}
+          onChange={(v) => patch("pontosAzul", v)}
+          editing={editing}
+        />
+        <NumberInputField
+          label="FlyingBlue"
+          value={form.pontosFlyingBlue}
+          onChange={(v) => patch("pontosFlyingBlue", v)}
           editing={editing}
         />
       </section>

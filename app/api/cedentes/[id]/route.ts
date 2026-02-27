@@ -74,11 +74,21 @@ const SELECT = {
   senhaLatamPass: true,
   senhaLivelo: true,
   senhaEsfera: true,
+  senhaIberia: true,
+  senhaAA: true,
+  senhaTAP: true,
+  senhaAzul: true,
+  senhaFlyingBlue: true,
 
   pontosLatam: true,
   pontosSmiles: true,
   pontosLivelo: true,
   pontosEsfera: true,
+  pontosIberia: true,
+  pontosAA: true,
+  pontosTAP: true,
+  pontosAzul: true,
+  pontosFlyingBlue: true,
 
   status: true,
   reviewedAt: true,
@@ -175,12 +185,22 @@ export async function PUT(req: NextRequest, ctx: Ctx) {
     if ("senhaLatamPass" in body) data.senhaLatamPass = strOrNull(body.senhaLatamPass);
     if ("senhaLivelo" in body) data.senhaLivelo = strOrNull(body.senhaLivelo);
     if ("senhaEsfera" in body) data.senhaEsfera = strOrNull(body.senhaEsfera);
+    if ("senhaIberia" in body) data.senhaIberia = strOrNull(body.senhaIberia);
+    if ("senhaAA" in body) data.senhaAA = strOrNull(body.senhaAA);
+    if ("senhaTAP" in body) data.senhaTAP = strOrNull(body.senhaTAP);
+    if ("senhaAzul" in body) data.senhaAzul = strOrNull(body.senhaAzul);
+    if ("senhaFlyingBlue" in body) data.senhaFlyingBlue = strOrNull(body.senhaFlyingBlue);
 
     // pontos
     if ("pontosLatam" in body) data.pontosLatam = intNonNeg(body.pontosLatam);
     if ("pontosSmiles" in body) data.pontosSmiles = intNonNeg(body.pontosSmiles);
     if ("pontosLivelo" in body) data.pontosLivelo = intNonNeg(body.pontosLivelo);
     if ("pontosEsfera" in body) data.pontosEsfera = intNonNeg(body.pontosEsfera);
+    if ("pontosIberia" in body) data.pontosIberia = intNonNeg(body.pontosIberia);
+    if ("pontosAA" in body) data.pontosAA = intNonNeg(body.pontosAA);
+    if ("pontosTAP" in body) data.pontosTAP = intNonNeg(body.pontosTAP);
+    if ("pontosAzul" in body) data.pontosAzul = intNonNeg(body.pontosAzul);
+    if ("pontosFlyingBlue" in body) data.pontosFlyingBlue = intNonNeg(body.pontosFlyingBlue);
 
     // obrigatórios (mantém current se não veio no body)
     const bancoFinal = "banco" in data ? data.banco : current.banco;

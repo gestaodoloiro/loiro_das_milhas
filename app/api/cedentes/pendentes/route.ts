@@ -39,6 +39,11 @@ export async function GET() {
         pontosSmiles: true,
         pontosLivelo: true,
         pontosEsfera: true,
+        pontosIberia: true,
+        pontosAA: true,
+        pontosTAP: true,
+        pontosAzul: true,
+        pontosFlyingBlue: true,
 
         createdAt: true,
 

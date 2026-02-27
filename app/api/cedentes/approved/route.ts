@@ -29,6 +29,11 @@ export async function GET() {
         pontosSmiles: true,
         pontosLivelo: true,
         pontosEsfera: true,
+        pontosIberia: true,
+        pontosAA: true,
+        pontosTAP: true,
+        pontosAzul: true,
+        pontosFlyingBlue: true,
         createdAt: true,
         owner: {
           select: { id: true, name: true, login: true },
@@ -51,6 +56,11 @@ export async function GET() {
       pontosSmiles: r.pontosSmiles,
       pontosLivelo: r.pontosLivelo,
       pontosEsfera: r.pontosEsfera,
+      pontosIberia: r.pontosIberia,
+      pontosAA: r.pontosAA,
+      pontosTAP: r.pontosTAP,
+      pontosAzul: r.pontosAzul,
+      pontosFlyingBlue: r.pontosFlyingBlue,
       createdAt: r.createdAt.toISOString(),
       owner: r.owner,
       blockedPrograms: (r.blockedAccounts || []).map((b) => b.program), // ["LATAM","SMILES"...]

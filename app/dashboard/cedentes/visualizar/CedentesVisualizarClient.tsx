@@ -1,9 +1,19 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-type Program = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
+type BlockProgram = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
+type ProgramKey =
+  | "latam"
+  | "smiles"
+  | "livelo"
+  | "esfera"
+  | "azul"
+  | "iberia"
+  | "aa"
+  | "tap"
+  | "flyingblue";
 
 type Row = {
   id: string;
@@ -14,15 +24,36 @@ type Row = {
   pontosSmiles: number;
   pontosLivelo: number;
   pontosEsfera: number;
+  pontosAzul: number;
+  pontosIberia: number;
+  pontosAA: number;
+  pontosTAP: number;
+  pontosFlyingBlue: number;
   createdAt: string;
   owner: { id: string; name: string; login: string };
-
-  // ✅ vem da API
-  blockedPrograms?: Program[];
+  blockedPrograms?: BlockProgram[];
 };
 
-type SortKey = "nome" | "latam" | "smiles" | "livelo" | "esfera";
+type SortKey = "nome" | ProgramKey;
 type SortDir = "asc" | "desc";
+
+const PROGRAM_META: Record<
+  ProgramKey,
+  { label: string; blockedProgram?: BlockProgram }
+> = {
+  latam: { label: "LATAM", blockedProgram: "LATAM" },
+  smiles: { label: "SMILES", blockedProgram: "SMILES" },
+  livelo: { label: "LIVELO", blockedProgram: "LIVELO" },
+  esfera: { label: "ESFERA", blockedProgram: "ESFERA" },
+  azul: { label: "AZUL" },
+  iberia: { label: "IBERIA" },
+  aa: { label: "AA" },
+  tap: { label: "TAP" },
+  flyingblue: { label: "FLYINGBLUE" },
+};
+
+const BR_PROGRAMS: ProgramKey[] = ["latam", "smiles", "livelo", "esfera", "azul"];
+const ALL_PROGRAMS = Object.keys(PROGRAM_META) as ProgramKey[];
 
 function fmtInt(n: number) {
   return new Intl.NumberFormat("pt-BR").format(n || 0);
@@ -38,22 +69,53 @@ function cn(...xs: Array<string | false | undefined | null>) {
   return xs.filter(Boolean).join(" ");
 }
 
-function isBlocked(r: Row, program: Program) {
+function pointsOf(r: Row, key: ProgramKey): number {
+  if (key === "latam") return r.pontosLatam || 0;
+  if (key === "smiles") return r.pontosSmiles || 0;
+  if (key === "livelo") return r.pontosLivelo || 0;
+  if (key === "esfera") return r.pontosEsfera || 0;
+  if (key === "azul") return r.pontosAzul || 0;
+  if (key === "iberia") return r.pontosIberia || 0;
+  if (key === "aa") return r.pontosAA || 0;
+  if (key === "tap") return r.pontosTAP || 0;
+  return r.pontosFlyingBlue || 0;
+}
+
+function isBlocked(r: Row, program: BlockProgram) {
   return (r.blockedPrograms || []).includes(program);
 }
 
 export default function CedentesVisualizarClient() {
   const router = useRouter();
+  const search = useSearchParams();
 
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
-
   const [selected, setSelected] = useState<Set<string>>(new Set());
-
   const [q, setQ] = useState("");
   const [ownerFilter, setOwnerFilter] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("nome");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  const programaRaw = (search?.get("programa") || "").toLowerCase();
+  const programaSelecionado = ALL_PROGRAMS.includes(programaRaw as ProgramKey)
+    ? (programaRaw as ProgramKey)
+    : null;
+
+  const visiblePrograms = programaSelecionado ? [programaSelecionado] : BR_PROGRAMS;
+  const titleSuffix = programaSelecionado
+    ? PROGRAM_META[programaSelecionado].label
+    : "Todos-BR";
+
+  useEffect(() => {
+    if (programaSelecionado) {
+      setSortKey(programaSelecionado);
+      setSortDir("desc");
+      return;
+    }
+    setSortKey("nome");
+    setSortDir("asc");
+  }, [programaSelecionado]);
 
   async function load() {
     setLoading(true);
@@ -76,9 +138,6 @@ export default function CedentesVisualizarClient() {
     load();
   }, []);
 
-  /* =======================
-     Seleção
-  ======================= */
   function toggleOne(id: string) {
     setSelected((prev) => {
       const n = new Set(prev);
@@ -95,9 +154,6 @@ export default function CedentesVisualizarClient() {
     });
   }
 
-  /* =======================
-     Delete (com senha do LOGIN)
-  ======================= */
   async function askPassword(): Promise<string | null> {
     const password = prompt("Digite sua senha do login para confirmar:");
     const v = (password ?? "").trim();
@@ -106,7 +162,6 @@ export default function CedentesVisualizarClient() {
 
   async function deleteSelected() {
     if (!selected.size) return;
-
     if (!confirm(`Apagar ${selected.size} cedente(s) selecionado(s)?`)) return;
 
     const password = await askPassword();
@@ -148,9 +203,6 @@ export default function CedentesVisualizarClient() {
     await load();
   }
 
-  /* =======================
-     Filtros / ordenação
-  ======================= */
   const owners = useMemo(() => {
     const map = new Map<string, string>();
     rows.forEach((r) => r.owner?.id && map.set(r.owner.id, r.owner.name));
@@ -163,6 +215,7 @@ export default function CedentesVisualizarClient() {
     return rows
       .filter((r) => {
         if (ownerFilter && r.owner?.id !== ownerFilter) return false;
+        if (programaSelecionado && pointsOf(r, programaSelecionado) <= 0) return false;
         if (!s) return true;
 
         return (
@@ -173,58 +226,39 @@ export default function CedentesVisualizarClient() {
         );
       })
       .sort((a, b) => {
-        let va: number | string = "";
-        let vb: number | string = "";
-
-        switch (sortKey) {
-          case "nome":
-            va = a.nomeCompleto.toLowerCase();
-            vb = b.nomeCompleto.toLowerCase();
-            break;
-          case "latam":
-            va = a.pontosLatam;
-            vb = b.pontosLatam;
-            break;
-          case "smiles":
-            va = a.pontosSmiles;
-            vb = b.pontosSmiles;
-            break;
-          case "livelo":
-            va = a.pontosLivelo;
-            vb = b.pontosLivelo;
-            break;
-          case "esfera":
-            va = a.pontosEsfera;
-            vb = b.pontosEsfera;
-            break;
+        if (sortKey === "nome") {
+          const va = a.nomeCompleto.toLowerCase();
+          const vb = b.nomeCompleto.toLowerCase();
+          if (va < vb) return sortDir === "asc" ? -1 : 1;
+          if (va > vb) return sortDir === "asc" ? 1 : -1;
+          return 0;
         }
 
+        const va = pointsOf(a, sortKey);
+        const vb = pointsOf(b, sortKey);
         if (va < vb) return sortDir === "asc" ? -1 : 1;
         if (va > vb) return sortDir === "asc" ? 1 : -1;
-        return 0;
+        return a.nomeCompleto.localeCompare(b.nomeCompleto, "pt-BR");
       });
-  }, [rows, q, ownerFilter, sortKey, sortDir]);
+  }, [rows, q, ownerFilter, sortKey, sortDir, programaSelecionado]);
 
   function toggleSort(key: SortKey) {
     if (key === sortKey) {
       setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    } else {
-      setSortKey(key);
-      setSortDir(key === "nome" ? "asc" : "desc");
+      return;
     }
+    setSortKey(key);
+    setSortDir(key === "nome" ? "asc" : "desc");
   }
 
   const arrow = (key: SortKey) =>
     sortKey === key ? (sortDir === "asc" ? " ↑" : " ↓") : "";
 
-  /* =======================
-     UI
-  ======================= */
   return (
     <div className="max-w-6xl">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Cedentes • Todos</h1>
+          <h1 className="text-2xl font-bold">Cedentes • {titleSuffix}</h1>
           <p className="text-sm text-slate-600">
             Cedentes aprovados com pontos e responsável
           </p>
@@ -282,7 +316,7 @@ export default function CedentesVisualizarClient() {
       </div>
 
       <div className="rounded-2xl border overflow-hidden">
-        <table className="min-w-[1060px] w-full text-sm">
+        <table className="min-w-[1240px] w-full text-sm">
           <thead className="bg-slate-50">
             <tr>
               <th className="px-4 py-3">
@@ -298,10 +332,12 @@ export default function CedentesVisualizarClient() {
               <Th onClick={() => toggleSort("nome")}>Nome{arrow("nome")}</Th>
               <Th>Responsável</Th>
 
-              <ThRight onClick={() => toggleSort("latam")}>LATAM{arrow("latam")}</ThRight>
-              <ThRight onClick={() => toggleSort("smiles")}>SMILES{arrow("smiles")}</ThRight>
-              <ThRight onClick={() => toggleSort("livelo")}>LIVELO{arrow("livelo")}</ThRight>
-              <ThRight onClick={() => toggleSort("esfera")}>ESFERA{arrow("esfera")}</ThRight>
+              {visiblePrograms.map((program) => (
+                <ThRight key={program} onClick={() => toggleSort(program)}>
+                  {PROGRAM_META[program].label}
+                  {arrow(program)}
+                </ThRight>
+              ))}
 
               <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600 text-right">
                 Ações
@@ -312,7 +348,10 @@ export default function CedentesVisualizarClient() {
           <tbody>
             {!loading && filtered.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-6 py-10 text-center text-sm text-slate-500">
+                <td
+                  colSpan={4 + visiblePrograms.length}
+                  className="px-6 py-10 text-center text-sm text-slate-500"
+                >
                   Nenhum cedente encontrado.
                 </td>
               </tr>
@@ -335,7 +374,11 @@ export default function CedentesVisualizarClient() {
                   <td className="px-4 py-3">
                     <div
                       className={cn("font-medium", hasAnyBlock && "text-red-600")}
-                      title={hasAnyBlock ? `Bloqueado: ${(r.blockedPrograms || []).join(", ")}` : undefined}
+                      title={
+                        hasAnyBlock
+                          ? `Bloqueado: ${(r.blockedPrograms || []).join(", ")}`
+                          : undefined
+                      }
                     >
                       {r.nomeCompleto}
                     </div>
@@ -350,21 +393,18 @@ export default function CedentesVisualizarClient() {
                     <div className="text-xs text-slate-500">@{r.owner?.login}</div>
                   </td>
 
-                  <TdRight className={isBlocked(r, "LATAM") ? "text-red-600 font-semibold" : ""}>
-                    {fmtInt(r.pontosLatam)}
-                  </TdRight>
-
-                  <TdRight className={isBlocked(r, "SMILES") ? "text-red-600 font-semibold" : ""}>
-                    {fmtInt(r.pontosSmiles)}
-                  </TdRight>
-
-                  <TdRight className={isBlocked(r, "LIVELO") ? "text-red-600 font-semibold" : ""}>
-                    {fmtInt(r.pontosLivelo)}
-                  </TdRight>
-
-                  <TdRight className={isBlocked(r, "ESFERA") ? "text-red-600 font-semibold" : ""}>
-                    {fmtInt(r.pontosEsfera)}
-                  </TdRight>
+                  {visiblePrograms.map((program) => {
+                    const blockedProgram = PROGRAM_META[program].blockedProgram;
+                    const blocked = blockedProgram ? isBlocked(r, blockedProgram) : false;
+                    return (
+                      <TdRight
+                        key={`${r.id}-${program}`}
+                        className={blocked ? "text-red-600 font-semibold" : ""}
+                      >
+                        {fmtInt(pointsOf(r, program))}
+                      </TdRight>
+                    );
+                  })}
 
                   <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
                     <div className="flex justify-end gap-2">

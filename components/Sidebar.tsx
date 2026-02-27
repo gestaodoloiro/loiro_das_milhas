@@ -627,7 +627,7 @@ export default function Sidebar() {
                     programa === "" ? "bg-black text-white" : "hover:bg-slate-100"
                   )}
                 >
-                  Todos
+                  Todos-BR
                 </button>
 
                 <button
@@ -680,6 +680,71 @@ export default function Sidebar() {
                   )}
                 >
                   Esfera
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => goVisualizarPrograma("azul")}
+                  className={cn(
+                    "px-3 py-1 text-xs rounded-full border",
+                    programa === "azul"
+                      ? "bg-black text-white"
+                      : "hover:bg-slate-100"
+                  )}
+                >
+                  Azul
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => goVisualizarPrograma("iberia")}
+                  className={cn(
+                    "px-3 py-1 text-xs rounded-full border",
+                    programa === "iberia"
+                      ? "bg-black text-white"
+                      : "hover:bg-slate-100"
+                  )}
+                >
+                  Iberia
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => goVisualizarPrograma("aa")}
+                  className={cn(
+                    "px-3 py-1 text-xs rounded-full border",
+                    programa === "aa"
+                      ? "bg-black text-white"
+                      : "hover:bg-slate-100"
+                  )}
+                >
+                  AA
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => goVisualizarPrograma("tap")}
+                  className={cn(
+                    "px-3 py-1 text-xs rounded-full border",
+                    programa === "tap"
+                      ? "bg-black text-white"
+                      : "hover:bg-slate-100"
+                  )}
+                >
+                  TAP
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => goVisualizarPrograma("flyingblue")}
+                  className={cn(
+                    "px-3 py-1 text-xs rounded-full border",
+                    programa === "flyingblue"
+                      ? "bg-black text-white"
+                      : "hover:bg-slate-100"
+                  )}
+                >
+                  FlyingBlue
                 </button>
               </div>
             </div>

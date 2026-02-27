@@ -25,6 +25,14 @@ function asTrimOrNull(v: unknown): string | null {
   return s ? s : null;
 }
 
+function fromOneOf(body: any, keys: string[]): string | null {
+  for (const key of keys) {
+    const value = asTrimOrNull(body?.[key]);
+    if (value) return value;
+  }
+  return null;
+}
+
 function asIntNonNeg(v: unknown): number {
   const n = typeof v === "number" ? v : Number(v);
   if (!Number.isFinite(n)) return 0;
@@ -139,16 +147,26 @@ export async function POST(req: NextRequest) {
         titularConfirmado: true,
 
         // ✅ SENHAS (SEM ENC)
-        senhaEmail: asTrimOrNull(body?.senhaEmail),
-        senhaSmiles: asTrimOrNull(body?.senhaSmiles),
-        senhaLatamPass: asTrimOrNull(body?.senhaLatamPass),
-        senhaLivelo: asTrimOrNull(body?.senhaLivelo),
-        senhaEsfera: asTrimOrNull(body?.senhaEsfera),
+        senhaEmail: fromOneOf(body, ["senhaEmail", "senhaEmailEnc"]),
+        senhaSmiles: fromOneOf(body, ["senhaSmiles", "senhaSmilesEnc"]),
+        senhaLatamPass: fromOneOf(body, ["senhaLatamPass", "senhaLatamPassEnc"]),
+        senhaLivelo: fromOneOf(body, ["senhaLivelo", "senhaLiveloEnc"]),
+        senhaEsfera: fromOneOf(body, ["senhaEsfera", "senhaEsferaEnc"]),
+        senhaIberia: fromOneOf(body, ["senhaIberia", "senhaIberiaEnc"]),
+        senhaAA: fromOneOf(body, ["senhaAA", "senhaAAEnc"]),
+        senhaTAP: fromOneOf(body, ["senhaTAP", "senhaTAPEnc"]),
+        senhaAzul: fromOneOf(body, ["senhaAzul", "senhaAzulEnc"]),
+        senhaFlyingBlue: fromOneOf(body, ["senhaFlyingBlue", "senhaFlyingBlueEnc"]),
 
         pontosLatam: asIntNonNeg(body?.pontosLatam),
         pontosSmiles: asIntNonNeg(body?.pontosSmiles),
         pontosLivelo: asIntNonNeg(body?.pontosLivelo),
         pontosEsfera: asIntNonNeg(body?.pontosEsfera),
+        pontosIberia: asIntNonNeg(body?.pontosIberia),
+        pontosAA: asIntNonNeg(body?.pontosAA),
+        pontosTAP: asIntNonNeg(body?.pontosTAP),
+        pontosAzul: asIntNonNeg(body?.pontosAzul),
+        pontosFlyingBlue: asIntNonNeg(body?.pontosFlyingBlue),
 
         status,
 

@@ -19,6 +19,11 @@ type FormState = {
   senhaLatamPass: string;
   senhaLivelo: string;
   senhaEsfera: string;
+  senhaIberia: string;
+  senhaAA: string;
+  senhaTAP: string;
+  senhaAzul: string;
+  senhaFlyingBlue: string;
 
   // ✅ PIX obrigatório (schema exige banco + pixTipo + chavePix)
   pixTipo: PixTipo;
@@ -29,6 +34,11 @@ type FormState = {
   pontosSmiles: number | "";
   pontosLivelo: number | "";
   pontosEsfera: number | "";
+  pontosIberia: number | "";
+  pontosAA: number | "";
+  pontosTAP: number | "";
+  pontosAzul: number | "";
+  pontosFlyingBlue: number | "";
 };
 
 function onlyDigits(v: string) {
@@ -104,6 +114,11 @@ export default function CedentesNovoPage() {
     senhaLatamPass: "",
     senhaLivelo: "",
     senhaEsfera: "",
+    senhaIberia: "",
+    senhaAA: "",
+    senhaTAP: "",
+    senhaAzul: "",
+    senhaFlyingBlue: "",
 
     pixTipo: "",
     chavePix: "",
@@ -113,6 +128,11 @@ export default function CedentesNovoPage() {
     pontosSmiles: "",
     pontosLivelo: "",
     pontosEsfera: "",
+    pontosIberia: "",
+    pontosAA: "",
+    pontosTAP: "",
+    pontosAzul: "",
+    pontosFlyingBlue: "",
   });
 
   const [saving, setSaving] = useState(false);
@@ -162,17 +182,27 @@ export default function CedentesNovoPage() {
         pixTipo: form.pixTipo,
         chavePix: form.chavePix.trim(),
 
-        // sem criptografia (como você pediu)
-        senhaEmailEnc: form.senhaEmail || null,
-        senhaSmilesEnc: form.senhaSmiles || null,
-        senhaLatamPassEnc: form.senhaLatamPass || null,
-        senhaLiveloEnc: form.senhaLivelo || null,
-        senhaEsferaEnc: form.senhaEsfera || null,
+        // sem criptografia
+        senhaEmail: form.senhaEmail || null,
+        senhaSmiles: form.senhaSmiles || null,
+        senhaLatamPass: form.senhaLatamPass || null,
+        senhaLivelo: form.senhaLivelo || null,
+        senhaEsfera: form.senhaEsfera || null,
+        senhaIberia: form.senhaIberia || null,
+        senhaAA: form.senhaAA || null,
+        senhaTAP: form.senhaTAP || null,
+        senhaAzul: form.senhaAzul || null,
+        senhaFlyingBlue: form.senhaFlyingBlue || null,
 
         pontosLatam: Number(form.pontosLatam || 0),
         pontosSmiles: Number(form.pontosSmiles || 0),
         pontosLivelo: Number(form.pontosLivelo || 0),
         pontosEsfera: Number(form.pontosEsfera || 0),
+        pontosIberia: Number(form.pontosIberia || 0),
+        pontosAA: Number(form.pontosAA || 0),
+        pontosTAP: Number(form.pontosTAP || 0),
+        pontosAzul: Number(form.pontosAzul || 0),
+        pontosFlyingBlue: Number(form.pontosFlyingBlue || 0),
       };
 
       const res = await fetch("/api/cedentes", {
@@ -198,6 +228,11 @@ export default function CedentesNovoPage() {
         senhaLatamPass: "",
         senhaLivelo: "",
         senhaEsfera: "",
+        senhaIberia: "",
+        senhaAA: "",
+        senhaTAP: "",
+        senhaAzul: "",
+        senhaFlyingBlue: "",
 
         pixTipo: "",
         chavePix: "",
@@ -207,6 +242,11 @@ export default function CedentesNovoPage() {
         pontosSmiles: "",
         pontosLivelo: "",
         pontosEsfera: "",
+        pontosIberia: "",
+        pontosAA: "",
+        pontosTAP: "",
+        pontosAzul: "",
+        pontosFlyingBlue: "",
       });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Erro ao cadastrar.";
@@ -410,6 +450,51 @@ export default function CedentesNovoPage() {
               </div>
 
               <div>
+                <label className="mb-1 block text-sm">Senha Iberia</label>
+                <input
+                  className="w-full rounded-xl border px-3 py-2"
+                  value={form.senhaIberia}
+                  onChange={(e) => setField("senhaIberia", e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm">Senha AA</label>
+                <input
+                  className="w-full rounded-xl border px-3 py-2"
+                  value={form.senhaAA}
+                  onChange={(e) => setField("senhaAA", e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm">Senha TAP</label>
+                <input
+                  className="w-full rounded-xl border px-3 py-2"
+                  value={form.senhaTAP}
+                  onChange={(e) => setField("senhaTAP", e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm">Senha Azul</label>
+                <input
+                  className="w-full rounded-xl border px-3 py-2"
+                  value={form.senhaAzul}
+                  onChange={(e) => setField("senhaAzul", e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm">Senha FlyingBlue</label>
+                <input
+                  className="w-full rounded-xl border px-3 py-2"
+                  value={form.senhaFlyingBlue}
+                  onChange={(e) => setField("senhaFlyingBlue", e.target.value)}
+                />
+              </div>
+
+              <div>
                 <label className="mb-1 block text-sm">Tipo de chave PIX</label>
                 <select
                   className="w-full rounded-xl border px-3 py-2 bg-white"
@@ -457,6 +542,15 @@ export default function CedentesNovoPage() {
               <FieldNumber label="Smiles" value={form.pontosSmiles} onChange={(v) => setField("pontosSmiles", v)} />
               <FieldNumber label="Livelo" value={form.pontosLivelo} onChange={(v) => setField("pontosLivelo", v)} />
               <FieldNumber label="Esfera" value={form.pontosEsfera} onChange={(v) => setField("pontosEsfera", v)} />
+              <FieldNumber label="Iberia" value={form.pontosIberia} onChange={(v) => setField("pontosIberia", v)} />
+              <FieldNumber label="AA" value={form.pontosAA} onChange={(v) => setField("pontosAA", v)} />
+              <FieldNumber label="TAP" value={form.pontosTAP} onChange={(v) => setField("pontosTAP", v)} />
+              <FieldNumber label="Azul" value={form.pontosAzul} onChange={(v) => setField("pontosAzul", v)} />
+              <FieldNumber
+                label="FlyingBlue"
+                value={form.pontosFlyingBlue}
+                onChange={(v) => setField("pontosFlyingBlue", v)}
+              />
             </div>
           </section>
 
