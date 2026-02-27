@@ -8,9 +8,10 @@ export const revalidate = 0;
 
 type Role = "admin" | "staff";
 
-const TEAM = "@vias_aereas";
+const TEAM = "@loiro_das_milhas";
 const sha256 = (s: string) => crypto.createHash("sha256").update(s).digest("hex");
 const norm = (s: string | null | undefined) => (s ?? "").trim().toLowerCase();
+const OLD_SEED_LOGINS = ["jephesson", "lucas", "paola", "eduarda"] as const;
 
 // ✅ cookie pequeno
 type SessionCookie = {
@@ -35,31 +36,10 @@ const SEED_USERS: Array<{
   password: string;
 }> = [
   {
-    login: "jephesson",
-    name: "Jephesson Alex Floriano dos Santos",
-    email: "jephesson@gmail.com",
+    login: "rafael",
+    name: "Rafael Nascimento",
+    email: null,
     role: "admin",
-    password: "ufpb2010",
-  },
-  {
-    login: "lucas",
-    name: "Lucas Henrique Floriano de Araújo",
-    email: "luucasaraujo97@gmail.com",
-    role: "staff",
-    password: "1234",
-  },
-  {
-    login: "paola",
-    name: "Paola Rampelotto Ziani",
-    email: "paolaziani5@gmail.com",
-    role: "staff",
-    password: "1234",
-  },
-  {
-    login: "eduarda",
-    name: "Eduarda Vargas de Freitas",
-    email: "eduarda.jeph@gmail.com",
-    role: "staff",
     password: "1234",
   },
 ];
@@ -112,8 +92,23 @@ function isApiBody(v: unknown): v is ApiBody {
   return action === "login" || action === "setPassword" || action === "resetSeed" || action === "logout";
 }
 
+async function pruneOldSeedUsers() {
+  for (const login of OLD_SEED_LOGINS) {
+    try {
+      await prisma.user.delete({ where: { login } });
+    } catch (e: any) {
+      // P2025 = não encontrado. Outros erros (ex: vínculo em FK) só registram.
+      if (e?.code !== "P2025") {
+        console.warn(`Não foi possível remover usuário legado "${login}":`, e?.message || e);
+      }
+    }
+  }
+}
+
 // ✅ IMPORTANTE: não sobrescreve senha de usuário que já existe
 async function seedUsersToDb() {
+  await pruneOldSeedUsers();
+
   for (const u of SEED_USERS) {
     const login = norm(u.login);
 

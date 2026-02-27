@@ -30,10 +30,11 @@ export default function NovoFuncionarioPage() {
   const [name, setName] = useState("");
   const [employeeId, setEmployeeId] = useState(""); // ✅ NOVO: ID (primeiro.ultimo)
   const [cpf, setCpf] = useState("");
+  const [email, setEmail] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [login, setLogin] = useState("");
 
-  const TEAM_FIXED = "@vias_aereas";
-  const [team] = useState(TEAM_FIXED);
+  const [team, setTeam] = useState("@loiro_das_milhas");
 
   const [password, setPassword] = useState("");
 
@@ -65,6 +66,8 @@ export default function NovoFuncionarioPage() {
         employeeId: slugifyId(employeeId), // ✅
         cpf: onlyDigits(cpf),
         login: login.trim().toLowerCase(),
+        email: email.trim().toLowerCase(),
+        whatsapp: whatsapp.trim(),
         team,
         password,
       };
@@ -134,8 +137,34 @@ export default function NovoFuncionarioPage() {
         </div>
 
         <div>
+          <label className="block text-sm mb-1">Email</label>
+          <input
+            className="w-full rounded-xl border px-3 py-2"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="email@empresa.com"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm mb-1">WhatsApp</label>
+          <input
+            className="w-full rounded-xl border px-3 py-2"
+            value={whatsapp}
+            onChange={(e) => setWhatsapp(e.target.value)}
+            placeholder="(DDD) 99999-9999"
+          />
+        </div>
+
+        <div>
           <label className="block text-sm mb-1">Time</label>
-          <input className="w-full rounded-xl border px-3 py-2 bg-slate-50" value={team} readOnly />
+          <input
+            className="w-full rounded-xl border px-3 py-2"
+            value={team}
+            onChange={(e) => setTeam(e.target.value)}
+            placeholder="@loiro_das_milhas"
+          />
         </div>
 
         <div>

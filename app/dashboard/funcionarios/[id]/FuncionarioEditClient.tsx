@@ -8,6 +8,8 @@ type FuncItem = {
   employeeId: string | null;
   login: string;
   cpf: string | null;
+  email: string | null;
+  whatsapp: string | null;
   team: string;
   role: string;
   inviteCode: string | null;
@@ -49,6 +51,9 @@ export default function FuncionarioEditClient({ id }: { id: string }) {
   const [employeeId, setEmployeeId] = useState("");
   const [cpf, setCpf] = useState("");
   const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [team, setTeam] = useState("");
 
   // troca de senha
   const [oldPassword, setOldPassword] = useState("");
@@ -70,6 +75,9 @@ export default function FuncionarioEditClient({ id }: { id: string }) {
       setEmployeeId(u.employeeId || "");
       setCpf(u.cpf || "");
       setLogin(u.login || "");
+      setEmail(u.email || "");
+      setWhatsapp(u.whatsapp || "");
+      setTeam(u.team || "");
     } catch (e: any) {
       setMsg(e?.message || "Erro");
     } finally {
@@ -97,6 +105,9 @@ export default function FuncionarioEditClient({ id }: { id: string }) {
         employeeId: slugifyId(employeeId),
         cpf: onlyDigits(cpf),
         login: login.trim().toLowerCase(),
+        email: email.trim().toLowerCase(),
+        whatsapp: whatsapp.trim(),
+        team: team.trim(),
       };
 
       if (!payload.name) throw new Error("Nome obrigatório.");
@@ -216,8 +227,34 @@ export default function FuncionarioEditClient({ id }: { id: string }) {
           </div>
 
           <div>
+            <label className="block text-sm mb-1">Email</label>
+            <input
+              type="email"
+              className="w-full rounded-xl border px-3 py-2"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="email@empresa.com"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm mb-1">WhatsApp</label>
+            <input
+              className="w-full rounded-xl border px-3 py-2"
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+              placeholder="(DDD) 99999-9999"
+            />
+          </div>
+
+          <div>
             <label className="block text-sm mb-1">Time</label>
-            <input className="w-full rounded-xl border px-3 py-2 bg-slate-50" value={item.team} readOnly />
+            <input
+              className="w-full rounded-xl border px-3 py-2"
+              value={team}
+              onChange={(e) => setTeam(e.target.value)}
+              placeholder="@loiro_das_milhas"
+            />
           </div>
 
           <button type="submit" disabled={saving} className="rounded-xl bg-black px-4 py-2 text-white disabled:opacity-60">

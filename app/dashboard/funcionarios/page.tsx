@@ -7,6 +7,8 @@ type FuncItem = {
   name: string;
   login: string;
   cpf: string | null;
+  email: string | null;
+  whatsapp: string | null;
   team: string;
   role: string;
   inviteCode: string | null;
@@ -73,6 +75,10 @@ export default function FuncionariosPage() {
                       Login: <span className="font-medium">{f.login}</span> • CPF:{" "}
                       <span className="font-medium">{f.cpf || "-"}</span> • Time:{" "}
                       <span className="font-medium">{f.team}</span>
+                    </div>
+                    <div className="text-xs text-slate-500">
+                      Email: <span className="font-medium">{f.email || "-"}</span> • WhatsApp:{" "}
+                      <span className="font-medium">{f.whatsapp || "-"}</span>
                     </div>
                     <div className="text-xs text-slate-500">
                       Cedentes vinculados: <span className="font-semibold">{f._count?.cedentes ?? 0}</span>

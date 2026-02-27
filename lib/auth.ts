@@ -61,7 +61,7 @@ export async function ensureSeedCredentials(): Promise<void> {
   } catch {}
 }
 
-/** Restaura credenciais do seed (jephesson/ufpb2010; demais/1234) */
+/** Restaura credenciais do seed (rafael/1234) */
 export async function resetCredentialsToSeed(): Promise<boolean> {
   const res = await fetch("/api/auth", {
     method: "POST",

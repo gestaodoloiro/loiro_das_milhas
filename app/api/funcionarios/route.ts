@@ -49,6 +49,8 @@ export async function GET() {
         login: true,
         name: true,
         cpf: true,
+        email: true,
+        whatsapp: true,
         employeeId: true, // ✅
         role: true,
         team: true,
@@ -63,6 +65,8 @@ export async function GET() {
       name: u.name,
       login: u.login,
       cpf: u.cpf,
+      email: u.email,
+      whatsapp: u.whatsapp,
       employeeId: u.employeeId ?? null,
       team: u.team,
       role: u.role,
@@ -95,8 +99,11 @@ export async function POST(req: NextRequest) {
     const employeeIdRaw = typeof body?.employeeId === "string" ? body.employeeId.trim() : "";
     const employeeId = slugifyId(employeeIdRaw);
 
-    const email = typeof body?.email === "string" ? body.email.trim() : null;
-    const team = typeof body?.team === "string" && body.team.trim() ? body.team.trim() : "@vias_aereas";
+    const emailRaw = typeof body?.email === "string" ? body.email.trim() : "";
+    const email = emailRaw ? emailRaw.toLowerCase() : null;
+    const whatsappRaw = typeof body?.whatsapp === "string" ? body.whatsapp.trim() : "";
+    const whatsapp = whatsappRaw || null;
+    const team = typeof body?.team === "string" && body.team.trim() ? body.team.trim() : "@loiro_das_milhas";
     const role: Role = body?.role === "admin" ? "admin" : "staff";
     const password = typeof body?.password === "string" ? body.password : "";
 
@@ -137,6 +144,7 @@ export async function POST(req: NextRequest) {
         cpf: cpf ? cpf : null,
         employeeId, // ✅
         email,
+        whatsapp,
         team,
         role,
         passwordHash: sha256(password),
@@ -146,6 +154,8 @@ export async function POST(req: NextRequest) {
         name: true,
         login: true,
         cpf: true,
+        email: true,
+        whatsapp: true,
         employeeId: true,
         team: true,
         role: true,
