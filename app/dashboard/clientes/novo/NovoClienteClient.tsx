@@ -141,7 +141,7 @@ export default function NovoClienteClient() {
             label={tipo === "EMPRESA" ? "Nome da empresa" : "Nome completo"}
             value={nome}
             onChange={setNome}
-            placeholder={tipo === "EMPRESA" ? "Ex: TradeMiles LTDA" : "Ex: João Silva"}
+            placeholder={tipo === "EMPRESA" ? "Ex: Gestão do Loiro LTDA" : "Ex: João Silva"}
           />
 
           <Input

@@ -44,7 +44,7 @@ export async function GET() {
     });
 
     const wb = new ExcelJS.Workbook();
-    wb.creator = "TradeMiles";
+    wb.creator = "Gestão do Loiro";
     wb.created = new Date();
 
     const ws = wb.addWorksheet("Clientes");

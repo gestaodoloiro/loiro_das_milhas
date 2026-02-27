@@ -522,8 +522,8 @@ export default function Sidebar() {
       {/* Header */}
       <div className="flex items-center justify-between border-b bg-white/80 backdrop-blur p-4">
         <div className="flex items-center gap-3">
-          <Image src="/trademiles.png" alt="TradeMiles" width={32} height={32} />
-          <span className="font-semibold text-slate-800">TradeMiles</span>
+          <Image src="/logo-gestao-loiro.png" alt="Gestão do Loiro" width={32} height={32} />
+          <span className="font-semibold text-slate-800">Gestão do Loiro</span>
         </div>
 
         {session && (

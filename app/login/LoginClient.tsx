@@ -57,15 +57,15 @@ export default function LoginClient() {
           {/* Header */}
           <div className="flex items-center gap-3">
             <Image
-              src="/trademiles.png"
-              alt="TradeMiles"
+              src="/logo-gestao-loiro.png"
+              alt="Gestão do Loiro"
               width={36}
               height={36}
               priority
               className="rounded-md"
             />
             <div>
-              <h1 className="text-xl font-semibold tracking-tight">TradeMiles</h1>
+              <h1 className="text-xl font-semibold tracking-tight">Gestão do Loiro</h1>
               <p className="text-xs text-neutral-500">Acesse seu painel</p>
             </div>
           </div>
@@ -110,8 +110,8 @@ export default function LoginClient() {
 
           {/* Rodapé institucional */}
           <footer className="pt-3 text-center text-[11px] text-neutral-500 space-y-0.5">
-            <p>TradeMiles — uma empresa do grupo Vias Aéreas LTDA</p>
-            <p>CNPJ: 63.817.773/0001-85</p>
+            <p>Gestão do Loiro</p>
+            <p>Painel interno de gestão</p>
           </footer>
         </form>
 

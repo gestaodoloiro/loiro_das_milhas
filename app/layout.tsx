@@ -2,6 +2,18 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+const APP_NAME = "Gestão do Loiro";
+
+function resolveMetadataBase() {
+  const fallback = "https://loiro-das-milhas.vercel.app";
+  const raw = process.env.NEXT_PUBLIC_APP_URL?.trim() || fallback;
+  try {
+    return new URL(raw);
+  } catch {
+    return new URL(fallback);
+  }
+}
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -13,19 +25,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://tradmiles-final.vercel.app"),
+  metadataBase: resolveMetadataBase(),
   title: {
-    default: "TradeMiles",
-    template: "%s · TradeMiles",
+    default: APP_NAME,
+    template: `%s · ${APP_NAME}`,
   },
   description: "Painel de gestão de milhas, compras e emissões.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
   openGraph: {
     type: "website",
-    url: "https://tradmiles-final.vercel.app",
-    title: "TradeMiles",
+    url: resolveMetadataBase().toString(),
+    title: APP_NAME,
     description: "Painel de gestão de milhas, compras e emissões.",
-    siteName: "TradeMiles",
+    siteName: APP_NAME,
   },
   themeColor: "#000000",
   robots: { index: true, follow: true },

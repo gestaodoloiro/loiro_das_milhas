@@ -175,7 +175,7 @@ export default function EditarClienteClient({ id }: { id: string }) {
             label={tipo === "EMPRESA" ? "Nome da empresa" : "Nome completo"}
             value={nome}
             onChange={setNome}
-            placeholder={tipo === "EMPRESA" ? "Ex: TradeMiles LTDA" : "Ex: João Silva"}
+            placeholder={tipo === "EMPRESA" ? "Ex: Gestão do Loiro LTDA" : "Ex: João Silva"}
           />
 
           <Input

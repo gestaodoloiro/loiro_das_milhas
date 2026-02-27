@@ -384,7 +384,7 @@ function drawHeader(
     page.rect({ x: 0, y: 0, w: PAGE_WIDTH, h: 88, fill: COLORS.headerBg });
 
     page.text({
-      text: "TradeMiles | Relatorio Mensal de Comissoes",
+      text: "Gestão do Loiro | Relatorio Mensal de Comissoes",
       x: MARGIN,
       y: 32,
       font: "F2",
@@ -657,7 +657,7 @@ function drawFooter(page: PdfCanvas, pageNumber: number) {
   });
 
   page.text({
-    text: "TradeMiles | Relatorio mensal de comissoes",
+    text: "Gestão do Loiro | Relatorio mensal de comissoes",
     x: MARGIN,
     y: footerTop + 16,
     size: 8,
