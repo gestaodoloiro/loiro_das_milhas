@@ -5,7 +5,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { getSession } from "@/lib/auth";
 
-type Program = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
+type Program =
+  | "LATAM"
+  | "SMILES"
+  | "LIVELO"
+  | "ESFERA"
+  | "AZUL"
+  | "IBERIA"
+  | "AA"
+  | "TAP"
+  | "FLYING_BLUE";
 type PointsMode = "TOTAL" | "POR_PAX";
 type ProgramKey = "latam" | "smiles" | "livelo" | "esfera";
 type TripKind = "IDA" | "IDA_VOLTA";
@@ -1339,6 +1348,11 @@ export default function NovaVendaClient({ initialMe }: { initialMe: UserLite }) 
               <option value="SMILES">SMILES</option>
               <option value="LIVELO">LIVELO</option>
               <option value="ESFERA">ESFERA</option>
+              <option value="AZUL">AZUL</option>
+              <option value="IBERIA">IBERIA</option>
+              <option value="AA">AA</option>
+              <option value="TAP">TAP</option>
+              <option value="FLYING_BLUE">FlyingBlue</option>
             </select>
           </label>
 

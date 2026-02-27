@@ -5,7 +5,17 @@ import { getSessionServer } from "@/lib/auth-server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const PROGRAMS = ["LATAM", "SMILES", "LIVELO", "ESFERA"] as const;
+const PROGRAMS = [
+  "LATAM",
+  "SMILES",
+  "LIVELO",
+  "ESFERA",
+  "AZUL",
+  "IBERIA",
+  "AA",
+  "TAP",
+  "FLYING_BLUE",
+] as const;
 type Program = (typeof PROGRAMS)[number];
 
 const STATUSES = ["ACTIVE", "PAUSED", "CANCELED", "NEVER"] as const;
@@ -31,11 +41,7 @@ type ClubCell = {
 
 type MatrixRow = {
   cedente: CedenteLite;
-  LATAM: ClubCell | null;
-  SMILES: ClubCell | null;
-  LIVELO: ClubCell | null;
-  ESFERA: ClubCell | null;
-};
+} & Record<Program, ClubCell | null>;
 
 function bad(message: string, status = 400) {
   return NextResponse.json({ ok: false, error: message }, { status });
@@ -117,12 +123,9 @@ function applyFilters(rows: MatrixRow[], q?: string, program?: Program | "", sta
     // filtros programa/status
     if (!prog && !st) return true;
 
-    const cells = {
-      LATAM: r.LATAM,
-      SMILES: r.SMILES,
-      LIVELO: r.LIVELO,
-      ESFERA: r.ESFERA,
-    } as const;
+    const cells = Object.fromEntries(
+      PROGRAMS.map((p) => [p, r[p]])
+    ) as Record<Program, ClubCell | null>;
 
     // quando escolhe um programa específico
     if (prog) {
@@ -136,15 +139,10 @@ function applyFilters(rows: MatrixRow[], q?: string, program?: Program | "", sta
     if (st) {
       if (st === "NEVER") {
         // "NEVER" = não tem nenhum clube em nenhum programa
-        return !r.LATAM && !r.SMILES && !r.LIVELO && !r.ESFERA;
+        return PROGRAMS.every((p) => !r[p]);
       }
       // status = qualquer programa com esse status
-      return (
-        (r.LATAM && r.LATAM.status === st) ||
-        (r.SMILES && r.SMILES.status === st) ||
-        (r.LIVELO && r.LIVELO.status === st) ||
-        (r.ESFERA && r.ESFERA.status === st)
-      );
+      return PROGRAMS.some((p) => Boolean(r[p] && r[p]!.status === st));
     }
 
     return true;
@@ -211,6 +209,11 @@ export async function GET(req: NextRequest) {
         SMILES: get("SMILES"),
         LIVELO: get("LIVELO"),
         ESFERA: get("ESFERA"),
+        AZUL: get("AZUL"),
+        IBERIA: get("IBERIA"),
+        AA: get("AA"),
+        TAP: get("TAP"),
+        FLYING_BLUE: get("FLYING_BLUE"),
       };
     });
 

@@ -2,7 +2,17 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type Points = { latam: number; smiles: number; livelo: number; esfera: number };
+type Points = {
+  latam: number;
+  smiles: number;
+  livelo: number;
+  esfera: number;
+  azul: number;
+  iberia: number;
+  aa: number;
+  tap: number;
+  flyingBlue: number;
+};
 
 type Snapshot = {
   id: string;
@@ -138,6 +148,11 @@ export default function CedentesResumoClient() {
     smiles: 0,
     livelo: 0,
     esfera: 0,
+    azul: 0,
+    iberia: 0,
+    aa: 0,
+    tap: 0,
+    flyingBlue: 0,
   });
 
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
@@ -167,6 +182,11 @@ export default function CedentesResumoClient() {
   const [rateSmiles, setRateSmiles] = useState("18,00");
   const [rateLivelo, setRateLivelo] = useState("22,00");
   const [rateEsfera, setRateEsfera] = useState("17,00");
+  const [rateAzul, setRateAzul] = useState("17,00");
+  const [rateIberia, setRateIberia] = useState("17,00");
+  const [rateAA, setRateAA] = useState("17,00");
+  const [rateTap, setRateTap] = useState("17,00");
+  const [rateFlyingBlue, setRateFlyingBlue] = useState("17,00");
 
   const [didLoad, setDidLoad] = useState(false);
 
@@ -197,6 +217,11 @@ export default function CedentesResumoClient() {
         setRateSmiles(centsToRateInput(rates.smilesRateCents));
         setRateLivelo(centsToRateInput(rates.liveloRateCents));
         setRateEsfera(centsToRateInput(rates.esferaRateCents));
+        setRateAzul(centsToRateInput(rates.azulRateCents));
+        setRateIberia(centsToRateInput(rates.iberiaRateCents));
+        setRateAA(centsToRateInput(rates.aaRateCents));
+        setRateTap(centsToRateInput(rates.tapRateCents));
+        setRateFlyingBlue(centsToRateInput(rates.flyingBlueRateCents));
       }
 
       setDebtsOpenCents(Number(j.data.debtsOpenCents || 0));
@@ -244,6 +269,11 @@ export default function CedentesResumoClient() {
         smiles: rateSmiles,
         livelo: rateLivelo,
         esfera: rateEsfera,
+        azul: rateAzul,
+        iberia: rateIberia,
+        aa: rateAA,
+        tap: rateTap,
+        flyingBlue: rateFlyingBlue,
       }),
     });
     const j = await res.json();
@@ -257,23 +287,49 @@ export default function CedentesResumoClient() {
     }, 600);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rateLatam, rateSmiles, rateLivelo, rateEsfera, didLoad]);
+  }, [
+    rateLatam,
+    rateSmiles,
+    rateLivelo,
+    rateEsfera,
+    rateAzul,
+    rateIberia,
+    rateAA,
+    rateTap,
+    rateFlyingBlue,
+    didLoad,
+  ]);
 
   const calc = useMemo(() => {
     const milLatam = Math.floor((points.latam || 0) / 1000);
     const milSmiles = Math.floor((points.smiles || 0) / 1000);
     const milLivelo = Math.floor((points.livelo || 0) / 1000);
     const milEsfera = Math.floor((points.esfera || 0) / 1000);
+    const milAzul = Math.floor((points.azul || 0) / 1000);
+    const milIberia = Math.floor((points.iberia || 0) / 1000);
+    const milAA = Math.floor((points.aa || 0) / 1000);
+    const milTap = Math.floor((points.tap || 0) / 1000);
+    const milFlyingBlue = Math.floor((points.flyingBlue || 0) / 1000);
 
     const rLatam = Number(String(rateLatam).replace(",", ".")) || 0;
     const rSmiles = Number(String(rateSmiles).replace(",", ".")) || 0;
     const rLivelo = Number(String(rateLivelo).replace(",", ".")) || 0;
     const rEsfera = Number(String(rateEsfera).replace(",", ".")) || 0;
+    const rAzul = Number(String(rateAzul).replace(",", ".")) || 0;
+    const rIberia = Number(String(rateIberia).replace(",", ".")) || 0;
+    const rAA = Number(String(rateAA).replace(",", ".")) || 0;
+    const rTap = Number(String(rateTap).replace(",", ".")) || 0;
+    const rFlyingBlue = Number(String(rateFlyingBlue).replace(",", ".")) || 0;
 
     const vLatamCents = Math.round(milLatam * rLatam * 100);
     const vSmilesCents = Math.round(milSmiles * rSmiles * 100);
     const vLiveloCents = Math.round(milLivelo * rLivelo * 100);
     const vEsferaCents = Math.round(milEsfera * rEsfera * 100);
+    const vAzulCents = Math.round(milAzul * rAzul * 100);
+    const vIberiaCents = Math.round(milIberia * rIberia * 100);
+    const vAACents = Math.round(milAA * rAA * 100);
+    const vTapCents = Math.round(milTap * rTap * 100);
+    const vFlyingBlueCents = Math.round(milFlyingBlue * rFlyingBlue * 100);
 
     const cashCents = toCentsFromInput(cashInput);
 
@@ -285,6 +341,11 @@ export default function CedentesResumoClient() {
       vSmilesCents +
       vLiveloCents +
       vEsferaCents +
+      vAzulCents +
+      vIberiaCents +
+      vAACents +
+      vTapCents +
+      vFlyingBlueCents +
       cashCents +
       receivableSalesCents +
       receivableDARcents;
@@ -312,10 +373,20 @@ export default function CedentesResumoClient() {
       milSmiles,
       milLivelo,
       milEsfera,
+      milAzul,
+      milIberia,
+      milAA,
+      milTap,
+      milFlyingBlue,
       vLatamCents,
       vSmilesCents,
       vLiveloCents,
       vEsferaCents,
+      vAzulCents,
+      vIberiaCents,
+      vAACents,
+      vTapCents,
+      vFlyingBlueCents,
       cashCents,
 
       receivableSalesCents,
@@ -332,6 +403,11 @@ export default function CedentesResumoClient() {
     rateSmiles,
     rateLivelo,
     rateEsfera,
+    rateAzul,
+    rateIberia,
+    rateAA,
+    rateTap,
+    rateFlyingBlue,
     cashInput,
     debtsOpenCents,
     pendingCedenteCommissionsCents,
@@ -396,7 +472,7 @@ export default function CedentesResumoClient() {
             </span>
           </div>
 
-          <div className="grid gap-2 sm:grid-cols-2 text-sm">
+          <div className="grid gap-2 sm:grid-cols-3 text-sm">
             <div>
               LATAM: <b>{fmtInt(points.latam)}</b>
             </div>
@@ -408,6 +484,21 @@ export default function CedentesResumoClient() {
             </div>
             <div>
               Esfera: <b>{fmtInt(points.esfera)}</b>
+            </div>
+            <div>
+              Azul: <b>{fmtInt(points.azul)}</b>
+            </div>
+            <div>
+              Iberia: <b>{fmtInt(points.iberia)}</b>
+            </div>
+            <div>
+              AA: <b>{fmtInt(points.aa)}</b>
+            </div>
+            <div>
+              TAP: <b>{fmtInt(points.tap)}</b>
+            </div>
+            <div>
+              FlyingBlue: <b>{fmtInt(points.flyingBlue)}</b>
             </div>
           </div>
 
@@ -505,14 +596,23 @@ export default function CedentesResumoClient() {
           </button>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <Input label="LATAM" value={rateLatam} onChange={setRateLatam} />
           <Input label="Smiles" value={rateSmiles} onChange={setRateSmiles} />
           <Input label="Livelo" value={rateLivelo} onChange={setRateLivelo} />
           <Input label="Esfera" value={rateEsfera} onChange={setRateEsfera} />
+          <Input label="Azul" value={rateAzul} onChange={setRateAzul} />
+          <Input label="Iberia" value={rateIberia} onChange={setRateIberia} />
+          <Input label="AA" value={rateAA} onChange={setRateAA} />
+          <Input label="TAP" value={rateTap} onChange={setRateTap} />
+          <Input
+            label="FlyingBlue"
+            value={rateFlyingBlue}
+            onChange={setRateFlyingBlue}
+          />
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <div className="rounded-xl border p-3">
             <div className="text-xs text-slate-600">LATAM</div>
             <div className="text-sm">
@@ -535,6 +635,36 @@ export default function CedentesResumoClient() {
             <div className="text-xs text-slate-600">Esfera</div>
             <div className="text-sm">
               Milheiros: <b>{fmtInt(calc.milEsfera)}</b> • Valor: <b>{fmtMoneyBR(calc.vEsferaCents)}</b>
+            </div>
+          </div>
+          <div className="rounded-xl border p-3">
+            <div className="text-xs text-slate-600">Azul</div>
+            <div className="text-sm">
+              Milheiros: <b>{fmtInt(calc.milAzul)}</b> • Valor: <b>{fmtMoneyBR(calc.vAzulCents)}</b>
+            </div>
+          </div>
+          <div className="rounded-xl border p-3">
+            <div className="text-xs text-slate-600">Iberia</div>
+            <div className="text-sm">
+              Milheiros: <b>{fmtInt(calc.milIberia)}</b> • Valor: <b>{fmtMoneyBR(calc.vIberiaCents)}</b>
+            </div>
+          </div>
+          <div className="rounded-xl border p-3">
+            <div className="text-xs text-slate-600">AA</div>
+            <div className="text-sm">
+              Milheiros: <b>{fmtInt(calc.milAA)}</b> • Valor: <b>{fmtMoneyBR(calc.vAACents)}</b>
+            </div>
+          </div>
+          <div className="rounded-xl border p-3">
+            <div className="text-xs text-slate-600">TAP</div>
+            <div className="text-sm">
+              Milheiros: <b>{fmtInt(calc.milTap)}</b> • Valor: <b>{fmtMoneyBR(calc.vTapCents)}</b>
+            </div>
+          </div>
+          <div className="rounded-xl border p-3">
+            <div className="text-xs text-slate-600">FlyingBlue</div>
+            <div className="text-sm">
+              Milheiros: <b>{fmtInt(calc.milFlyingBlue)}</b> • Valor: <b>{fmtMoneyBR(calc.vFlyingBlueCents)}</b>
             </div>
           </div>
         </div>

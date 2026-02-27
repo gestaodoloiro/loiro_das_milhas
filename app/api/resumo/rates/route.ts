@@ -21,13 +21,23 @@ export async function POST(req: NextRequest) {
     const smilesRateCents = toCents(body?.smiles);
     const liveloRateCents = toCents(body?.livelo);
     const esferaRateCents = toCents(body?.esfera);
+    const azulRateCents = toCents(body?.azul);
+    const iberiaRateCents = toCents(body?.iberia);
+    const aaRateCents = toCents(body?.aa);
+    const tapRateCents = toCents(body?.tap);
+    const flyingBlueRateCents = toCents(body?.flyingBlue);
 
     // validação simples (evita salvar 0 sem querer)
     if (
       latamRateCents <= 0 ||
       smilesRateCents <= 0 ||
       liveloRateCents <= 0 ||
-      esferaRateCents <= 0
+      esferaRateCents <= 0 ||
+      azulRateCents <= 0 ||
+      iberiaRateCents <= 0 ||
+      aaRateCents <= 0 ||
+      tapRateCents <= 0 ||
+      flyingBlueRateCents <= 0
     ) {
       return NextResponse.json(
         { ok: false, error: "Informe valores válidos (> 0) para todos os milheiros." },
@@ -43,18 +53,33 @@ export async function POST(req: NextRequest) {
         smilesRateCents,
         liveloRateCents,
         esferaRateCents,
+        azulRateCents,
+        iberiaRateCents,
+        aaRateCents,
+        tapRateCents,
+        flyingBlueRateCents,
       },
       update: {
         latamRateCents,
         smilesRateCents,
         liveloRateCents,
         esferaRateCents,
+        azulRateCents,
+        iberiaRateCents,
+        aaRateCents,
+        tapRateCents,
+        flyingBlueRateCents,
       },
       select: {
         latamRateCents: true,
         smilesRateCents: true,
         liveloRateCents: true,
         esferaRateCents: true,
+        azulRateCents: true,
+        iberiaRateCents: true,
+        aaRateCents: true,
+        tapRateCents: true,
+        flyingBlueRateCents: true,
       },
     });
 

@@ -3,7 +3,18 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-type Program = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
+const PROGRAMS = [
+  { value: "LATAM", label: "LATAM" },
+  { value: "SMILES", label: "SMILES" },
+  { value: "LIVELO", label: "LIVELO" },
+  { value: "ESFERA", label: "ESFERA" },
+  { value: "AZUL", label: "AZUL" },
+  { value: "IBERIA", label: "IBERIA" },
+  { value: "AA", label: "AA" },
+  { value: "TAP", label: "TAP" },
+  { value: "FLYING_BLUE", label: "FlyingBlue" },
+] as const;
+type Program = (typeof PROGRAMS)[number]["value"];
 type Status = "ACTIVE" | "PAUSED" | "CANCELED" | "NEVER";
 
 type CedenteLite = {
@@ -26,11 +37,7 @@ type ClubCell = {
 
 type MatrixRow = {
   cedente: CedenteLite;
-  LATAM: ClubCell | null;
-  SMILES: ClubCell | null;
-  LIVELO: ClubCell | null;
-  ESFERA: ClubCell | null;
-};
+} & Record<Program, ClubCell | null>;
 
 async function jfetch(url: string, init?: RequestInit) {
   const r = await fetch(url, { cache: "no-store", ...(init || {}) });
@@ -153,11 +160,9 @@ export default function ClubesListaClient({
   const counts = useMemo(() => {
     const total = rows.length;
 
-    const withAny =
-      rows.filter((r) => r.LATAM || r.SMILES || r.LIVELO || r.ESFERA).length;
+    const withAny = rows.filter((r) => PROGRAMS.some((p) => Boolean(r[p.value]))).length;
 
-    const neverAll =
-      rows.filter((r) => !r.LATAM && !r.SMILES && !r.LIVELO && !r.ESFERA).length;
+    const neverAll = rows.filter((r) => PROGRAMS.every((p) => !r[p.value])).length;
 
     return { total, withAny, neverAll };
   }, [rows]);
@@ -169,7 +174,7 @@ export default function ClubesListaClient({
         <div>
           <h1 className="text-xl font-semibold tracking-tight">Clube • Lista</h1>
           <p className="text-sm text-neutral-500">
-            Matriz por cedente (LATAM/SMILES/LIVELO/ESFERA). Se não existir registro, aparece como <b>NUNCA</b>.
+            Matriz por cedente (todas as CIAs). Se não existir registro, aparece como <b>NUNCA</b>.
           </p>
           <p className="text-xs text-neutral-400 mt-1">
             Total: {counts.total} • Com algum clube: {counts.withAny} • Nunca assinado (todos): {counts.neverAll}
@@ -224,10 +229,11 @@ export default function ClubesListaClient({
             onChange={(e) => setFilterProgram(e.target.value as any)}
           >
             <option value="">Todos programas</option>
-            <option value="LATAM">LATAM</option>
-            <option value="SMILES">SMILES</option>
-            <option value="LIVELO">LIVELO</option>
-            <option value="ESFERA">ESFERA</option>
+            {PROGRAMS.map((p) => (
+              <option key={p.value} value={p.value}>
+                {p.label}
+              </option>
+            ))}
           </select>
 
           <select
@@ -266,14 +272,15 @@ export default function ClubesListaClient({
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-[980px] w-full text-sm">
+          <table className="min-w-[1500px] w-full text-sm">
             <thead className="bg-neutral-50 text-neutral-600">
               <tr>
                 <th className="text-left px-4 py-2">Cedente</th>
-                <th className="text-left px-4 py-2">LATAM</th>
-                <th className="text-left px-4 py-2">SMILES</th>
-                <th className="text-left px-4 py-2">LIVELO</th>
-                <th className="text-left px-4 py-2">ESFERA</th>
+                {PROGRAMS.map((p) => (
+                  <th key={p.value} className="text-left px-4 py-2">
+                    {p.label}
+                  </th>
+                ))}
                 <th className="text-right px-4 py-2">Ações</th>
               </tr>
             </thead>
@@ -288,21 +295,11 @@ export default function ClubesListaClient({
                     </div>
                   </td>
 
-                  <td className="px-4 py-2">
-                    <Cell cell={r.LATAM} program="LATAM" />
-                  </td>
-
-                  <td className="px-4 py-2">
-                    <Cell cell={r.SMILES} program="SMILES" />
-                  </td>
-
-                  <td className="px-4 py-2">
-                    <Cell cell={r.LIVELO} program="LIVELO" />
-                  </td>
-
-                  <td className="px-4 py-2">
-                    <Cell cell={r.ESFERA} program="ESFERA" />
-                  </td>
+                  {PROGRAMS.map((p) => (
+                    <td key={p.value} className="px-4 py-2">
+                      <Cell cell={r[p.value]} program={p.value} />
+                    </td>
+                  ))}
 
                   <td className="px-4 py-2 text-right">
                     <Link
@@ -319,7 +316,10 @@ export default function ClubesListaClient({
 
               {!rows.length && (
                 <tr>
-                  <td className="px-4 py-8 text-center text-neutral-500" colSpan={6}>
+                  <td
+                    className="px-4 py-8 text-center text-neutral-500"
+                    colSpan={PROGRAMS.length + 2}
+                  >
                     Nenhum cedente encontrado.
                   </td>
                 </tr>

@@ -1,4 +1,13 @@
-export type Program = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
+export type Program =
+  | "LATAM"
+  | "SMILES"
+  | "LIVELO"
+  | "ESFERA"
+  | "AZUL"
+  | "IBERIA"
+  | "AA"
+  | "TAP"
+  | "FLYING_BLUE";
 
 export function clampInt(v: any) {
   const n = Number(v);
@@ -23,7 +32,12 @@ export function pointsField(program: Program) {
   if (program === "LATAM") return "pontosLatam";
   if (program === "SMILES") return "pontosSmiles";
   if (program === "LIVELO") return "pontosLivelo";
-  return "pontosEsfera";
+  if (program === "ESFERA") return "pontosEsfera";
+  if (program === "AZUL") return "pontosAzul";
+  if (program === "IBERIA") return "pontosIberia";
+  if (program === "AA") return "pontosAA";
+  if (program === "TAP") return "pontosTAP";
+  return "pontosFlyingBlue";
 }
 
 export function formatSaleNumber(n: number) {

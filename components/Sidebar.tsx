@@ -916,7 +916,6 @@ export default function Sidebar() {
           accent="orange"
         >
           <NavLink href="/dashboard/resumo">Resumo</NavLink>
-          <NavLink href="/dashboard/caixa-imediato">Caixa imediato</NavLink>
 
           {/* ✅ NOVO: Prejuízo */}
           <NavLink href="/dashboard/prejuizo">Prejuízo</NavLink>
@@ -1058,16 +1057,14 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {session && (
-        <div className="border-t border-slate-200 bg-white/90 p-3">
-          <button
-            onClick={doLogout}
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-          >
-            Sair
-          </button>
-        </div>
-      )}
+      <div className="border-t border-slate-200 bg-white/90 p-3">
+        <button
+          onClick={doLogout}
+          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        >
+          Sair
+        </button>
+      </div>
     </aside>
   );
 }

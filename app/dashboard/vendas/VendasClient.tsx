@@ -55,7 +55,16 @@ type SaleRow = {
   numero: string;
   date: string;
 
-  program: "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
+  program:
+    | "LATAM"
+    | "SMILES"
+    | "LIVELO"
+    | "ESFERA"
+    | "AZUL"
+    | "IBERIA"
+    | "AA"
+    | "TAP"
+    | "FLYING_BLUE";
   points: number;
   milheiroCents: number;
   passengers: number;

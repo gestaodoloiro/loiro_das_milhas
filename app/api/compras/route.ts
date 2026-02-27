@@ -67,8 +67,21 @@ function normalizeEnumQ(q: string): LoyaltyProgram | null {
 
   // atalhos comuns (se tu digitar "GOL", ele vira SMILES)
   if (up === "GOL") return "SMILES";
+  if (up === "FLYINGBLUE") return "FLYING_BLUE";
+  if (up === "FLYING BLUE") return "FLYING_BLUE";
+  if (up === "TUDOAZUL") return "AZUL";
 
-  if (up === "LATAM" || up === "SMILES" || up === "LIVELO" || up === "ESFERA") {
+  if (
+    up === "LATAM" ||
+    up === "SMILES" ||
+    up === "LIVELO" ||
+    up === "ESFERA" ||
+    up === "AZUL" ||
+    up === "IBERIA" ||
+    up === "AA" ||
+    up === "TAP" ||
+    up === "FLYING_BLUE"
+  ) {
     return up as LoyaltyProgram;
   }
   return null;
@@ -237,7 +250,9 @@ export async function POST(req: Request) {
     const ciaAerea = rawProgram ? normalizeEnumQ(String(rawProgram)) : null;
 
     if (rawProgram && !ciaAerea) {
-      return badRequest("Programa/Cia inválido. Use: LATAM, SMILES, LIVELO, ESFERA.");
+      return badRequest(
+        "Programa/Cia inválido. Use: LATAM, SMILES, LIVELO, ESFERA, AZUL, IBERIA, AA, TAP, FLYING_BLUE."
+      );
     }
 
     const ciaPointsTotal = asInt(body.ciaPointsTotal ?? body.pontosCiaTotal ?? 0);

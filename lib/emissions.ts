@@ -6,6 +6,11 @@ export const EMISSION_LIMITS: Record<LoyaltyProgram, number> = {
   SMILES: 25,
   LIVELO: 999999, // se não usar, deixa alto
   ESFERA: 999999, // se não usar, deixa alto
+  AZUL: 999999,
+  IBERIA: 999999,
+  AA: 999999,
+  TAP: 999999,
+  FLYING_BLUE: 999999,
 };
 
 export function toNoonSP(date: Date) {

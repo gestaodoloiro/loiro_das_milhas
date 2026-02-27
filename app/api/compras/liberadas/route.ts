@@ -7,7 +7,16 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-type Program = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
+type Program =
+  | "LATAM"
+  | "SMILES"
+  | "LIVELO"
+  | "ESFERA"
+  | "AZUL"
+  | "IBERIA"
+  | "AA"
+  | "TAP"
+  | "FLYING_BLUE";
 type Sess = { id: string; login: string; team: string; role: "admin" | "staff" };
 
 function clampNonNegInt(n: any) {
@@ -71,7 +80,17 @@ async function getServerSession(): Promise<Sess | null> {
 }
 
 function isProgram(v: any): v is Program {
-  return v === "LATAM" || v === "SMILES" || v === "LIVELO" || v === "ESFERA";
+  return (
+    v === "LATAM" ||
+    v === "SMILES" ||
+    v === "LIVELO" ||
+    v === "ESFERA" ||
+    v === "AZUL" ||
+    v === "IBERIA" ||
+    v === "AA" ||
+    v === "TAP" ||
+    v === "FLYING_BLUE"
+  );
 }
 
 type FinalizedMode = "OPEN" | "FINALIZED" | "ALL";

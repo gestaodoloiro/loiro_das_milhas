@@ -23,11 +23,13 @@ function programKey(cia: LoyaltyProgram) {
   if (cia === "LATAM") return "LATAM";
   if (cia === "SMILES") return "SMILES";
   if (cia === "LIVELO") return "LIVELO";
-  return "ESFERA";
+  if (cia === "ESFERA") return "ESFERA";
+  return null;
 }
 
 function getAppliedOrPredictedPoints(p: any, cia: LoyaltyProgram, fallback: number) {
   const key = programKey(cia);
+  if (!key) return fallback;
 
   const aplicado = safeInt(p?.[`saldoAplicado${key}`], 0);
   if (aplicado > 0) return aplicado;
@@ -251,9 +253,24 @@ export async function POST(req: NextRequest, { params }: Ctx) {
         } else if (cia === "ESFERA") {
           await tx.cedente.update({ where: { id: cedenteId }, data: { pontosEsfera: { increment: deltaPoints } } });
           patchPurchase.saldoAplicadoEsfera = safeInt((compra as any).saldoAplicadoEsfera, 0) + deltaPoints;
+        } else if (cia === "AZUL") {
+          await tx.cedente.update({ where: { id: cedenteId }, data: { pontosAzul: { increment: deltaPoints } } });
+        } else if (cia === "IBERIA") {
+          await tx.cedente.update({ where: { id: cedenteId }, data: { pontosIberia: { increment: deltaPoints } } });
+        } else if (cia === "AA") {
+          await tx.cedente.update({ where: { id: cedenteId }, data: { pontosAA: { increment: deltaPoints } } });
+        } else if (cia === "TAP") {
+          await tx.cedente.update({ where: { id: cedenteId }, data: { pontosTAP: { increment: deltaPoints } } });
+        } else if (cia === "FLYING_BLUE") {
+          await tx.cedente.update({
+            where: { id: cedenteId },
+            data: { pontosFlyingBlue: { increment: deltaPoints } },
+          });
         }
 
-        await tx.purchase.update({ where: { id: purchaseId }, data: patchPurchase });
+        if (Object.keys(patchPurchase).length > 0) {
+          await tx.purchase.update({ where: { id: purchaseId }, data: patchPurchase });
+        }
       }
 
       // recalcula totais/custos/meta

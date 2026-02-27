@@ -48,6 +48,11 @@ enum LoyaltyProgram {
   SMILES
   LIVELO
   ESFERA
+  AZUL
+  IBERIA
+  AA
+  TAP
+  FLYING_BLUE
 }
 
 enum BlockStatus {
@@ -747,6 +752,11 @@ model Settings {
   smilesRateCents Int @default(1800)
   liveloRateCents Int @default(2200)
   esferaRateCents Int @default(1700)
+  azulRateCents Int @default(1700)
+  iberiaRateCents Int @default(1700)
+  aaRateCents Int @default(1700)
+  tapRateCents Int @default(1700)
+  flyingBlueRateCents Int @default(1700)
 
   taxPercent       Int       @default(8)
   taxEffectiveFrom DateTime?

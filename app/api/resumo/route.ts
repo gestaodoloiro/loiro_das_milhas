@@ -88,6 +88,11 @@ export async function GET(req: Request) {
         pontosSmiles: true,
         pontosLivelo: true,
         pontosEsfera: true,
+        pontosAzul: true,
+        pontosIberia: true,
+        pontosAA: true,
+        pontosTAP: true,
+        pontosFlyingBlue: true,
       },
     });
 
@@ -96,6 +101,11 @@ export async function GET(req: Request) {
       smiles: safeInt(agg._sum.pontosSmiles),
       livelo: safeInt(agg._sum.pontosLivelo),
       esfera: safeInt(agg._sum.pontosEsfera),
+      azul: safeInt(agg._sum.pontosAzul),
+      iberia: safeInt(agg._sum.pontosIberia),
+      aa: safeInt(agg._sum.pontosAA),
+      tap: safeInt(agg._sum.pontosTAP),
+      flyingBlue: safeInt(agg._sum.pontosFlyingBlue),
     };
 
     // rates (milheiro) salvo (config única)
@@ -108,6 +118,11 @@ export async function GET(req: Request) {
         smilesRateCents: true,
         liveloRateCents: true,
         esferaRateCents: true,
+        azulRateCents: true,
+        iberiaRateCents: true,
+        aaRateCents: true,
+        tapRateCents: true,
+        flyingBlueRateCents: true,
         taxPercent: true,
         taxEffectiveFrom: true,
       },

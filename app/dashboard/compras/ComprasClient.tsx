@@ -4,7 +4,16 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 type PurchaseStatus = "OPEN" | "DRAFT" | "READY" | "CLOSED" | "CANCELED";
-type LoyaltyProgram = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
+type LoyaltyProgram =
+  | "LATAM"
+  | "SMILES"
+  | "LIVELO"
+  | "ESFERA"
+  | "AZUL"
+  | "IBERIA"
+  | "AA"
+  | "TAP"
+  | "FLYING_BLUE";
 
 type PurchaseRowRaw = {
   id: string;

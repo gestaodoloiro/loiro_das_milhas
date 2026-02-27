@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Eye, MessageCircle, Pencil, UserRound } from "lucide-react";
 
 type BlockProgram = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
 type ProgramKey =
@@ -20,6 +21,7 @@ type Row = {
   identificador: string;
   nomeCompleto: string;
   cpf: string;
+  telefone?: string | null;
   pontosLatam: number;
   pontosSmiles: number;
   pontosLivelo: number;
@@ -83,6 +85,15 @@ function pointsOf(r: Row, key: ProgramKey): number {
 
 function isBlocked(r: Row, program: BlockProgram) {
   return (r.blockedPrograms || []).includes(program);
+}
+
+function whatsappHref(telefone?: string | null) {
+  let d = String(telefone || "").replace(/\D+/g, "");
+  if (!d) return null;
+  while (d.startsWith("00")) d = d.slice(2);
+  if (d.length === 10 || d.length === 11) d = `55${d}`;
+  if (d.length < 12) return null;
+  return `https://wa.me/${d}`;
 }
 
 export default function CedentesVisualizarClient() {
@@ -204,9 +215,19 @@ export default function CedentesVisualizarClient() {
   }
 
   const owners = useMemo(() => {
-    const map = new Map<string, string>();
-    rows.forEach((r) => r.owner?.id && map.set(r.owner.id, r.owner.name));
-    return Array.from(map.entries());
+    const map = new Map<string, { id: string; name: string; login: string }>();
+    rows.forEach((r) => {
+      if (!r.owner?.id) return;
+      if (map.has(r.owner.id)) return;
+      map.set(r.owner.id, {
+        id: r.owner.id,
+        name: r.owner.name || "",
+        login: r.owner.login || "",
+      });
+    });
+    return Array.from(map.values()).sort((a, b) =>
+      a.login.localeCompare(b.login, "pt-BR")
+    );
   }, [rows]);
 
   const filtered = useMemo(() => {
@@ -298,9 +319,9 @@ export default function CedentesVisualizarClient() {
             onChange={(e) => setOwnerFilter(e.target.value)}
           >
             <option value="">Todos responsáveis</option>
-            {owners.map(([id, name]) => (
-              <option key={id} value={id}>
-                {name}
+            {owners.map((o) => (
+              <option key={o.id} value={o.id}>
+                @{o.login}
               </option>
             ))}
           </select>
@@ -359,6 +380,17 @@ export default function CedentesVisualizarClient() {
 
             {filtered.map((r) => {
               const hasAnyBlock = (r.blockedPrograms || []).length > 0;
+              const waHref = whatsappHref(r.telefone);
+              const actionBtnBase =
+                "inline-flex h-8 w-8 items-center justify-center rounded-md border transition-colors";
+              const neutralActionBtnCls = cn(
+                actionBtnBase,
+                "border-slate-300 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              );
+              const whatsappActionBtnCls = cn(
+                actionBtnBase,
+                "border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+              );
 
               return (
                 <tr key={r.id} className="border-t hover:bg-slate-50">
@@ -389,8 +421,10 @@ export default function CedentesVisualizarClient() {
                   </td>
 
                   <td className="px-4 py-3">
-                    <div className="font-medium">{r.owner?.name}</div>
-                    <div className="text-xs text-slate-500">@{r.owner?.login}</div>
+                    <div className="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
+                      <UserRound size={14} />
+                      <span>@{r.owner?.login}</span>
+                    </div>
                   </td>
 
                   {visiblePrograms.map((program) => {
@@ -407,22 +441,58 @@ export default function CedentesVisualizarClient() {
                   })}
 
                   <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
-                    <div className="flex justify-end gap-2">
+                    <div className="flex justify-end gap-1">
+                      {waHref ? (
+                        <a
+                          href={waHref}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={whatsappActionBtnCls}
+                          title="Abrir conversa no WhatsApp do cedente"
+                        >
+                          <MessageCircle size={15} />
+                          <span className="sr-only">WhatsApp</span>
+                        </a>
+                      ) : (
+                        <button
+                          type="button"
+                          className={cn(neutralActionBtnCls, "opacity-40 cursor-not-allowed")}
+                          disabled
+                          title="Sem WhatsApp cadastrado"
+                        >
+                          <MessageCircle size={15} />
+                          <span className="sr-only">Sem WhatsApp</span>
+                        </button>
+                      )}
+
                       <button
                         type="button"
-                        className="rounded-lg border px-3 py-1 text-xs hover:bg-slate-50"
-                        onClick={() => router.push(`/dashboard/cedentes/${r.id}`)}
+                        className={neutralActionBtnCls}
+                        onClick={() => setOwnerFilter(r.owner?.id || "")}
+                        title={`Filtrar responsável: @${r.owner?.login || "-"}`}
                       >
-                        Ver
+                        <UserRound size={15} />
+                        <span className="sr-only">Responsável</span>
                       </button>
 
                       <button
                         type="button"
-                        className="rounded-lg border px-3 py-1 text-xs hover:bg-slate-50"
+                        className={neutralActionBtnCls}
+                        onClick={() => router.push(`/dashboard/cedentes/${r.id}`)}
+                        title="Ver cedente"
+                      >
+                        <Eye size={15} />
+                        <span className="sr-only">Ver</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        className={neutralActionBtnCls}
                         onClick={() => router.push(`/dashboard/cedentes/${r.id}?edit=1`)}
                         title="Abrir detalhe em modo edição"
                       >
-                        Editar
+                        <Pencil size={15} />
+                        <span className="sr-only">Editar</span>
                       </button>
                     </div>
                   </td>

@@ -5,13 +5,27 @@ export const dynamic = "force-dynamic";
 // opcional (se usar pg/adapter): garante Node
 export const runtime = "nodejs";
 
-type Program = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
+type Program =
+  | "LATAM"
+  | "SMILES"
+  | "LIVELO"
+  | "ESFERA"
+  | "AZUL"
+  | "IBERIA"
+  | "AA"
+  | "TAP"
+  | "FLYING_BLUE";
 
 function pickSenhaPrograma(program: Program, c: any) {
   if (program === "LATAM") return c?.senhaLatamPass ?? null;
   if (program === "SMILES") return c?.senhaSmiles ?? null;
   if (program === "LIVELO") return c?.senhaLivelo ?? null;
   if (program === "ESFERA") return c?.senhaEsfera ?? null;
+  if (program === "AZUL") return c?.senhaAzul ?? null;
+  if (program === "IBERIA") return c?.senhaIberia ?? null;
+  if (program === "AA") return c?.senhaAA ?? null;
+  if (program === "TAP") return c?.senhaTAP ?? null;
+  if (program === "FLYING_BLUE") return c?.senhaFlyingBlue ?? null;
   return null;
 }
 
@@ -42,7 +56,19 @@ export async function GET(req: NextRequest) {
         { status: 400 }
       );
     }
-    if (!["LATAM", "SMILES", "LIVELO", "ESFERA"].includes(program)) {
+    if (
+      ![
+        "LATAM",
+        "SMILES",
+        "LIVELO",
+        "ESFERA",
+        "AZUL",
+        "IBERIA",
+        "AA",
+        "TAP",
+        "FLYING_BLUE",
+      ].includes(program)
+    ) {
       return NextResponse.json(
         { ok: false, error: "program inválido." },
         { status: 400 }
@@ -59,6 +85,11 @@ export async function GET(req: NextRequest) {
         senhaSmiles: true,
         senhaLivelo: true,
         senhaEsfera: true,
+        senhaAzul: true,
+        senhaIberia: true,
+        senhaAA: true,
+        senhaTAP: true,
+        senhaFlyingBlue: true,
       },
     });
 

@@ -2,7 +2,16 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { clampInt, endOfYearExclusive, passengerLimit, pointsField, startOfYear } from "../../_helpers/sales";
 
-type Program = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
+type Program =
+  | "LATAM"
+  | "SMILES"
+  | "LIVELO"
+  | "ESFERA"
+  | "AZUL"
+  | "IBERIA"
+  | "AA"
+  | "TAP"
+  | "FLYING_BLUE";
 
 function priorityBucket(leftover: number) {
   if (leftover >= 0 && leftover <= 2000) return { bucket: 0, label: "MAX" as const };
@@ -18,7 +27,19 @@ export async function GET(req: Request) {
   const pointsNeeded = clampInt(searchParams.get("points"));
   const passengersNeeded = clampInt(searchParams.get("passengers"));
 
-  if (!["LATAM", "SMILES", "LIVELO", "ESFERA"].includes(program)) {
+  if (
+    ![
+      "LATAM",
+      "SMILES",
+      "LIVELO",
+      "ESFERA",
+      "AZUL",
+      "IBERIA",
+      "AA",
+      "TAP",
+      "FLYING_BLUE",
+    ].includes(program)
+  ) {
     return NextResponse.json({ ok: false, error: "program inválido" }, { status: 400 });
   }
   if (pointsNeeded <= 0 || passengersNeeded <= 0) {
@@ -57,6 +78,11 @@ export async function GET(req: Request) {
       pontosSmiles: true,
       pontosLivelo: true,
       pontosEsfera: true,
+      pontosAzul: true,
+      pontosIberia: true,
+      pontosAA: true,
+      pontosTAP: true,
+      pontosFlyingBlue: true,
       biometriaHorario: {
         select: {
           turnoManha: true,
@@ -69,18 +95,12 @@ export async function GET(req: Request) {
     take: 3000,
   });
 
-  const field = pointsField(program) as "pontosLatam" | "pontosSmiles" | "pontosLivelo" | "pontosEsfera";
+  const field = pointsField(program);
 
   const rows = cedentes
     .filter((c) => !blockedSet.has(c.id))
     .map((c) => {
-      const ptsByProgram: Record<typeof field, number> = {
-        pontosLatam: c.pontosLatam,
-        pontosSmiles: c.pontosSmiles,
-        pontosLivelo: c.pontosLivelo,
-        pontosEsfera: c.pontosEsfera,
-      };
-      const pts = clampInt(ptsByProgram[field]);
+      const pts = clampInt((c as any)[field]);
       const used = usedMap.get(c.id) || 0;
       const availablePax = Math.max(0, paxLimit - used);
 

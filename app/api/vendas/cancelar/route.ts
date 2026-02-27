@@ -34,6 +34,19 @@ export async function POST(req: Request) {
         await prisma.cedente.update({ where: { id: venda.cedenteId }, data: { pontosLivelo: { increment: inc } } });
       } else if (venda.program === LoyaltyProgram.ESFERA) {
         await prisma.cedente.update({ where: { id: venda.cedenteId }, data: { pontosEsfera: { increment: inc } } });
+      } else if (venda.program === LoyaltyProgram.AZUL) {
+        await prisma.cedente.update({ where: { id: venda.cedenteId }, data: { pontosAzul: { increment: inc } } });
+      } else if (venda.program === LoyaltyProgram.IBERIA) {
+        await prisma.cedente.update({ where: { id: venda.cedenteId }, data: { pontosIberia: { increment: inc } } });
+      } else if (venda.program === LoyaltyProgram.AA) {
+        await prisma.cedente.update({ where: { id: venda.cedenteId }, data: { pontosAA: { increment: inc } } });
+      } else if (venda.program === LoyaltyProgram.TAP) {
+        await prisma.cedente.update({ where: { id: venda.cedenteId }, data: { pontosTAP: { increment: inc } } });
+      } else if (venda.program === LoyaltyProgram.FLYING_BLUE) {
+        await prisma.cedente.update({
+          where: { id: venda.cedenteId },
+          data: { pontosFlyingBlue: { increment: inc } },
+        });
       }
     }
 

@@ -2,7 +2,18 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 
-type Program = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
+const PROGRAMS = [
+  "LATAM",
+  "SMILES",
+  "LIVELO",
+  "ESFERA",
+  "AZUL",
+  "IBERIA",
+  "AA",
+  "TAP",
+  "FLYING_BLUE",
+] as const;
+type Program = (typeof PROGRAMS)[number];
 type Status = "ACTIVE" | "PAUSED" | "CANCELED";
 
 type CedenteLite = {
@@ -562,6 +573,11 @@ export default function ClubesClient({
               <option value="SMILES">SMILES</option>
               <option value="LIVELO">LIVELO</option>
               <option value="ESFERA">ESFERA</option>
+              <option value="AZUL">AZUL</option>
+              <option value="IBERIA">IBERIA</option>
+              <option value="AA">AA</option>
+              <option value="TAP">TAP</option>
+              <option value="FLYING_BLUE">FlyingBlue</option>
             </select>
           </label>
 
@@ -690,10 +706,11 @@ export default function ClubesClient({
             disabled={loading}
           >
             <option value="">Todos programas</option>
-            <option value="LATAM">LATAM</option>
-            <option value="SMILES">SMILES</option>
-            <option value="LIVELO">LIVELO</option>
-            <option value="ESFERA">ESFERA</option>
+            {PROGRAMS.map((p) => (
+              <option key={p} value={p}>
+                {p === "FLYING_BLUE" ? "FlyingBlue" : p}
+              </option>
+            ))}
           </select>
 
           <select

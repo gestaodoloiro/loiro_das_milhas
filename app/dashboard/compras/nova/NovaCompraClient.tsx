@@ -3,7 +3,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 
-type LoyaltyProgram = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
+type LoyaltyProgram =
+  | "LATAM"
+  | "SMILES"
+  | "LIVELO"
+  | "ESFERA"
+  | "AZUL"
+  | "IBERIA"
+  | "AA"
+  | "TAP"
+  | "FLYING_BLUE";
+type ExpectedProgram = "LATAM" | "SMILES" | "LIVELO" | "ESFERA";
 
 type Cedente = {
   id: string;
@@ -14,6 +24,11 @@ type Cedente = {
   pontosSmiles: number;
   pontosLivelo: number;
   pontosEsfera: number;
+  pontosAzul: number;
+  pontosIberia: number;
+  pontosAA: number;
+  pontosTAP: number;
+  pontosFlyingBlue: number;
 };
 
 type PurchaseStatus = "OPEN" | "DRAFT" | "READY" | "CLOSED" | "CANCELED";
@@ -185,6 +200,11 @@ function computeProgramDeltas(items: PurchaseItem[]) {
     SMILES: 0,
     LIVELO: 0,
     ESFERA: 0,
+    AZUL: 0,
+    IBERIA: 0,
+    AA: 0,
+    TAP: 0,
+    FLYING_BLUE: 0,
   };
 
   const arr = Array.isArray(items) ? items : [];
@@ -235,6 +255,11 @@ const PROGRAM_LABEL: Record<LoyaltyProgram, string> = {
   SMILES: "Smiles",
   LIVELO: "Livelo",
   ESFERA: "Esfera",
+  AZUL: "Azul",
+  IBERIA: "Iberia",
+  AA: "AA",
+  TAP: "TAP",
+  FLYING_BLUE: "FlyingBlue",
 };
 
 const CLUB_TIERS = [1, 2, 3, 5, 7, 10, 12, 15, 20];
@@ -348,7 +373,7 @@ export default function NovaCompraClient({ purchaseId }: { purchaseId?: string }
     Record<string, boolean>
   >({});
   const [expectedAuto, setExpectedAuto] = useState<
-    Record<LoyaltyProgram, boolean>
+    Record<ExpectedProgram, boolean>
   >({
     LATAM: true,
     SMILES: true,
@@ -695,6 +720,11 @@ export default function NovaCompraClient({ purchaseId }: { purchaseId?: string }
       SMILES: (cedenteSel.pontosSmiles || 0) + deltas.SMILES,
       LIVELO: (cedenteSel.pontosLivelo || 0) + deltas.LIVELO,
       ESFERA: (cedenteSel.pontosEsfera || 0) + deltas.ESFERA,
+      AZUL: (cedenteSel.pontosAzul || 0) + deltas.AZUL,
+      IBERIA: (cedenteSel.pontosIberia || 0) + deltas.IBERIA,
+      AA: (cedenteSel.pontosAA || 0) + deltas.AA,
+      TAP: (cedenteSel.pontosTAP || 0) + deltas.TAP,
+      FLYING_BLUE: (cedenteSel.pontosFlyingBlue || 0) + deltas.FLYING_BLUE,
       deltas,
     };
   }, [cedenteSel, draft]);
@@ -827,6 +857,7 @@ export default function NovaCompraClient({ purchaseId }: { purchaseId?: string }
                     <div className="text-xs text-gray-500 text-right">
                       <div>LATAM {c.pontosLatam}</div>
                       <div>SMILES {c.pontosSmiles}</div>
+                      <div>AZUL {c.pontosAzul}</div>
                     </div>
                   </button>
                 ))}
@@ -849,8 +880,10 @@ export default function NovaCompraClient({ purchaseId }: { purchaseId?: string }
                 </div>
                 <div className="text-xs text-gray-500">
                   Saldos atuais: LATAM {cedenteSel.pontosLatam} · SMILES{" "}
-                  {cedenteSel.pontosSmiles} · LIVELO {cedenteSel.pontosLivelo} ·
-                  ESFERA {cedenteSel.pontosEsfera}
+                  {cedenteSel.pontosSmiles} · LIVELO {cedenteSel.pontosLivelo} · ESFERA{" "}
+                  {cedenteSel.pontosEsfera} · AZUL {cedenteSel.pontosAzul} · IBERIA{" "}
+                  {cedenteSel.pontosIberia} · AA {cedenteSel.pontosAA} · TAP{" "}
+                  {cedenteSel.pontosTAP} · FlyingBlue {cedenteSel.pontosFlyingBlue}
                 </div>
               </div>
             )}
@@ -1073,6 +1106,11 @@ export default function NovaCompraClient({ purchaseId }: { purchaseId?: string }
                             <option value="SMILES">Smiles</option>
                             <option value="LATAM">LATAM</option>
                             <option value="ESFERA">Esfera</option>
+                            <option value="AZUL">Azul</option>
+                            <option value="IBERIA">Iberia</option>
+                            <option value="AA">AA</option>
+                            <option value="TAP">TAP</option>
+                            <option value="FLYING_BLUE">FlyingBlue</option>
                           </select>
                         </td>
 
@@ -1240,7 +1278,8 @@ export default function NovaCompraClient({ purchaseId }: { purchaseId?: string }
           )}
 
           <div className="text-xs text-gray-600">
-            Para o milheiro: o cálculo usa o <b>Esperado</b> da CIA (LATAM/Smiles).
+            Para o milheiro: o cálculo usa o <b>Esperado</b> (LATAM/Smiles) ou os{" "}
+            <b>pontos da CIA base</b> (demais programas).
           </div>
         </div>
       )}
@@ -1273,6 +1312,13 @@ export default function NovaCompraClient({ purchaseId }: { purchaseId?: string }
                 <option value="">Selecione…</option>
                 <option value="LATAM">LATAM</option>
                 <option value="SMILES">Smiles</option>
+                <option value="LIVELO">Livelo</option>
+                <option value="ESFERA">Esfera</option>
+                <option value="AZUL">Azul</option>
+                <option value="IBERIA">Iberia</option>
+                <option value="AA">AA</option>
+                <option value="TAP">TAP</option>
+                <option value="FLYING_BLUE">FlyingBlue</option>
               </select>
 
               <div className="mt-2 text-xs text-gray-500">
@@ -1291,6 +1337,8 @@ export default function NovaCompraClient({ purchaseId }: { purchaseId?: string }
                   ? "Esperado LATAM"
                   : draft.ciaProgram === "SMILES"
                   ? "Esperado Smiles"
+                  : draft.ciaProgram
+                  ? `Pontos ${PROGRAM_LABEL[draft.ciaProgram]}`
                   : "—"}
               </div>
             </div>
@@ -1592,6 +1640,11 @@ function ItemCard(props: {
             <option value="SMILES">SMILES</option>
             <option value="LIVELO">LIVELO</option>
             <option value="ESFERA">ESFERA</option>
+            <option value="AZUL">AZUL</option>
+            <option value="IBERIA">IBERIA</option>
+            <option value="AA">AA</option>
+            <option value="TAP">TAP</option>
+            <option value="FLYING_BLUE">FlyingBlue</option>
           </select>
         </div>
 
@@ -1611,6 +1664,11 @@ function ItemCard(props: {
             <option value="SMILES">SMILES</option>
             <option value="LIVELO">LIVELO</option>
             <option value="ESFERA">ESFERA</option>
+            <option value="AZUL">AZUL</option>
+            <option value="IBERIA">IBERIA</option>
+            <option value="AA">AA</option>
+            <option value="TAP">TAP</option>
+            <option value="FLYING_BLUE">FlyingBlue</option>
           </select>
         </div>
 
